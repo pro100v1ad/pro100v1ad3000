@@ -1,0 +1,82 @@
+                                    Описание иерархии папок и классов
+
+src/
+├── main/
+│   ├── java/
+│   │   └── com/
+│   │       └── pro100v1ad3000/
+│   │           ├── core/                  # Ядро игры
+│   │           │   ├── GameMain.java      # Точка входа
+│   │           │   ├── GameStateManager.java # Управление состояниями (меню, игра, пауза)
+│   │           │   └── AssetManager.java  # Загрузка текстур, моделей, звуков
+│   │           │
+│   │           ├── network/               # Мультиплеер
+│   │           │   ├── client/            # Клиентская часть
+│   │           │   │   ├── NetworkClient.java
+│   │           │   │   └── handlers/      # Обработчики сетевых сообщений
+│   │           │   ├── server/            # Серверная часть (если P2P или выделенный сервер)
+│   │           │   │   ├── NetworkServer.java
+│   │           │   │   └── handlers/
+│   │           │   ├── packets/           # Сетевые пакеты (DTO)
+│   │           │   │   ├── PlayerMovePacket.java
+│   │           │   │   └── ChatMessagePacket.java
+│   │           │   └── NetworkUtils.java  # Утилиты (сериализация, ping)
+│   │           │
+│   │           ├── entities/              # Игровые сущности
+│   │           │   ├── players/           # Игроки (локальный/сетевой)
+│   │           │   │   ├── Player.java    # Базовый класс
+│   │           │   │   ├── LocalPlayer.java
+│   │           │   │   └── RemotePlayer.java
+│   │           │   ├── npc/               # NPC (боты, враги)
+│   │           │   ├── items/             # Предметы
+│   │           │   └── physics/           # Физика (коллайдеры, Raycast)
+│   │           │
+│   │           ├── world/                 # Игровой мир
+│   │           │   ├── chunks/            # Чанкование (если открытый мир)
+│   │           │   ├── terrain/           # Генерация ландшафта
+│   │           │   ├── lighting/          # Освещение, тени
+│   │           │   └── Skybox.java        # Небо, окружение
+│   │           │
+│   │           ├── ui/                    # Интерфейс
+│   │           │   ├── menus/             # Меню (главное, настройки)
+│   │           │   ├── hud/               # HUD (здоровье, чат)
+│   │           │   └── fonts/             # Шрифты
+│   │           │
+│   │           ├── utils/                 # Утилиты
+│   │           │   ├── MathUtils.java     # Векторы, кватернионы
+│   │           │   ├── Logger.java        # Логирование
+│   │           │   └── Config.java        # Настройки графики/управления
+│   │           │
+│   │           └── systems/               # Системы (ECS, если используется)
+│   │               ├── RenderSystem.java  # Отрисовка
+│   │               ├── PhysicsSystem.java # Физика
+│   │               └── InputSystem.java   # Управление
+│   │
+│   └── resources/
+│       ├── assets/
+│       │   ├── models/            # 3D-модели (.obj, .fbx)
+│       │   ├── textures/          # Текстуры (.png, .jpg)
+│       │   ├── shaders/           # Шейдеры (.vert, .frag)
+│       │   ├── sounds/            # Звуки и музыка
+│       │   └── maps/              # Карты/уровни
+│       └── config/
+│           ├── game.properties     # Настройки игры
+│           └── keybindings.json   # Клавиши управления
+│
+├── test/                          # Тесты
+│   └── java/
+│       └── com/
+│           └── yourgame/
+│               ├── network/       # Тесты сетевого кода
+│               └── systems/       # Тесты систем
+│
+└── server/                        # Отдельный модуль для сервера (если нужно)
+    └── src/
+        ├── main/java/
+        │   └── com/
+        │       └── yourgame/
+        │           └── server/
+        │               ├── MainServer.java
+        │               └── logic/          # Серверная логика (авторизация, матчмейкинг)
+        └── resources/
+            └── server.properties
