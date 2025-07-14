@@ -106,18 +106,23 @@ public class GameLoop {
     }
 
     private void render() {
-        // Создаем буфер для рендеринга
+
+        Dimension currentSize = gamePanel.getCurrentSize();
+
+        // Создаем буфер текущего размера
         BufferedImage buffer = new BufferedImage(
-                gamePanel.getWidth(),
-                gamePanel.getHeight(),
+                currentSize.width,
+                currentSize.height,
                 BufferedImage.TYPE_INT_RGB
         );
 
-        // Рендерим состояние игры
+        // Рендерим игровой мир
         Graphics2D g = buffer.createGraphics();
-        stateManager.render(g);
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        stateManager.render(g, currentSize.width, currentSize.height);
         g.dispose();
 
+        // Обновляем панель
         gamePanel.updateBuffer(buffer);
         SwingUtilities.invokeLater(gamePanel::repaint);
 

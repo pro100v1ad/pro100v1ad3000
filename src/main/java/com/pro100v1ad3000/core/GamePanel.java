@@ -1,6 +1,7 @@
 package main.java.com.pro100v1ad3000.core;
 
 import main.java.com.pro100v1ad3000.systems.InputManager;
+import main.java.com.pro100v1ad3000.utils.Config;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +14,15 @@ public class GamePanel extends JPanel {
 
     private InputManager inputManager;
 
-    public GamePanel(int width, int height) {
-        setPreferredSize(new Dimension(width, height));
+    public GamePanel() {
+        setPreferredSize(new Dimension(Config.BASE_WIDTH, Config.BASE_HEIGHT));
         setDoubleBuffered(false); // Используем свой буфер
         inputManager = new InputManager(this);
+        setFocusable(true);
+    }
+
+    public void onResize() {
+        repaint();
     }
 
     public InputManager getInputManager() {
@@ -32,13 +38,18 @@ public class GamePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         synchronized (bufferLock) {
             if(renderBuffer != null) {
-                g.drawImage(renderBuffer, 0, 0, null);
+
+                // Растягиваем изображение на всю доступную область
+                g.drawImage(renderBuffer, 0, 0, getWidth(), getHeight(), null);
             }
         }
     }
 
-
+    public Dimension getCurrentSize() {
+        return new Dimension(getWidth(), getHeight());
+    }
 
 }

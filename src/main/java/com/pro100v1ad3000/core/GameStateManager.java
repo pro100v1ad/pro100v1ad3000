@@ -8,11 +8,13 @@ import main.java.com.pro100v1ad3000.network.packets.PlayerMovePacket;
 import main.java.com.pro100v1ad3000.network.packets.ReconnectPacket;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.systems.InputManager;
+import main.java.com.pro100v1ad3000.utils.Config;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
@@ -185,12 +187,50 @@ public class GameStateManager {
 
     }
 
-    public void render(Graphics2D g) {
-        // Логика рендеринга
+    public void render(Graphics2D g, int currentWidth, int currentHeight) {
+        // Очистка экрана
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, currentWidth, currentHeight);
 
-        g.setColor(Color.GRAY);
-        g.fillRect(0, 0, 800, 600);
+        // рассчитываем масштаб
+        float scaleX = currentWidth / (float)Config.BASE_WIDTH;
+        float scaleY = currentHeight / (float)Config.BASE_HEIGHT;
 
+        // Сохраняем оригинальные трансформации
+        AffineTransform originalTransform = g.getTransform();
+
+        // Применяем масштабирование
+        g.scale(scaleX, scaleY);
+
+        // Отрисовка игровых объектов (в координатах 800х600)
+        renderGameObjects(g);
+
+        // Восстанавливаем оригинальные трансформации
+        g.setTransform(originalTransform);
+
+        // Отрисовка интерфейса
+         renderUI(g, currentWidth, currentHeight);
+
+    }
+
+    private void renderGameObjects(Graphics2D g) {
+        // Все объекты рисуются как будто экран 800х600
+        // Они автоматически растянутся при масштабировании
+
+        g.setColor(Color.PINK);
+        g.fillRect(100, 100, 200, 200);
+
+        g.setColor(Color.GREEN);
+        g.fillRect(150, 150, 300, 300);
+
+
+    }
+
+    private void renderUI(Graphics2D g, int screenWidth, int screenHeight) {
+        // Интерфейс можно рисовать без масштабирования, если нужны точные пиксельные размеры
+
+        g.setColor(Color.WHITE);
+        g.drawString("Score: 100", 20, 20);
     }
 
     public void dispose() { // Отключение клиента и сервера
