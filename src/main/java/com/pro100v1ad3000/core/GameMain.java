@@ -2,22 +2,35 @@ package main.java.com.pro100v1ad3000.core;
 
 import main.java.com.pro100v1ad3000.utils.Logger;
 
+import javax.swing.*;
+
 public class GameMain {
 
+    private GameWindow gameWindow;
     private GameLoop gameLoop;
     private GameStateManager gameStateManager;
 
     public void start() {
-        gameStateManager = new GameStateManager();
-        gameLoop = new GameLoop(gameStateManager);
-        gameLoop.start();
+
+        SwingUtilities.invokeLater(() -> {
+            // Инициализация компонентов
+            gameStateManager = new GameStateManager();
+            gameWindow = new GameWindow();
+            GamePanel gamePanel = gameWindow.getGamePanel();
+
+            // Создаем игровой цикл
+            gameLoop = new GameLoop(gameStateManager, gamePanel);
+
+            //Запускаем
+            gameWindow.setVisible(true);
+            gameLoop.start();
+        });
 
     }
 
     public void stop() {
 
         Logger.info("Завершение работы приложения");
-        Logger.shutdown();
 
         if(gameLoop != null) {
             gameLoop.stop();
@@ -25,6 +38,8 @@ public class GameMain {
         if(gameStateManager != null) {
             gameStateManager.dispose();
         }
+
+        Logger.shutdown();
     }
 
     public static void main(String[] args) {

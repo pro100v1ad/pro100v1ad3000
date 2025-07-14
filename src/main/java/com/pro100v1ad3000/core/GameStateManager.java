@@ -9,6 +9,7 @@ import main.java.com.pro100v1ad3000.network.packets.ReconnectPacket;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
@@ -139,11 +140,19 @@ public class GameStateManager {
         return new Random().nextInt(1000) + 1;
     }
 
-    public void update(float deltaTime) { // не знаю зачем
+    public void update(float deltaTime) { // тут ВСЯ ЛОГИКА
         // Обновляет состояние игры на основе времени, прошедшего с последнего кадра
         // Логика обновления состояния игры
 
         players.values().forEach(player -> player.update(deltaTime));
+
+    }
+
+    public void render(Graphics2D g) {
+        // Логика рендеринга
+
+        g.setColor(Color.GRAY);
+        g.fillRect(0, 0, 800, 600);
 
     }
 
