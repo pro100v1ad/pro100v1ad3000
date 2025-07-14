@@ -1,5 +1,7 @@
 package main.java.com.pro100v1ad3000.entities.players;
 
+import java.awt.*;
+
 public abstract class Player {
 
     protected int id;
@@ -12,6 +14,7 @@ public abstract class Player {
     }
 
     public abstract void update(float deltaTime);
+    public abstract void draw(Graphics2D g);
 
     public int getId() { return id; }
     public float getX() { return x; }

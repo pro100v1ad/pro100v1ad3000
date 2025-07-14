@@ -86,6 +86,7 @@ public class GameStateManager {
             localPlayer = new LocalPlayer(playerId, 0, 0, networkClient);
             players.put(localPlayer.getId(), localPlayer);
 
+            Logger.info("Player connected to server id: " + playerId);
             // Логика добавления игрока и отправки информации о новом игроке на сервер
             networkClient.sendPacket(new PlayerMovePacket(playerId, 0, 0));
 
@@ -153,19 +154,19 @@ public class GameStateManager {
     private void processInput(float deltaTime) {
         // Обработка клавиатуры
         if(inputManager.isKeyPressed(KeyEvent.VK_W)) {
-
+            localPlayer.move(0, -5);
         }
 
         if(inputManager.isKeyPressed(KeyEvent.VK_A)) {
-
+            localPlayer.move(-5, 0);
         }
 
         if(inputManager.isKeyPressed(KeyEvent.VK_S)) {
-
+            localPlayer.move(0, 5);
         }
 
         if(inputManager.isKeyPressed(KeyEvent.VK_D)) {
-
+            localPlayer.move(5, 0);
         }
 
         // Обработка мыши
@@ -223,6 +224,8 @@ public class GameStateManager {
         g.setColor(Color.GREEN);
         g.fillRect(150, 150, 300, 300);
 
+        players.values().forEach(player -> player.draw(g));
+
 
     }
 
@@ -230,7 +233,8 @@ public class GameStateManager {
         // Интерфейс можно рисовать без масштабирования, если нужны точные пиксельные размеры
 
         g.setColor(Color.WHITE);
-        g.drawString("Score: 100", 20, 20);
+        String text = (isHost) ? "Server" : "Client";
+        g.drawString(text, 20, 20);
     }
 
     public void dispose() { // Отключение клиента и сервера
