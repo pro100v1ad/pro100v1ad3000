@@ -7,9 +7,12 @@ import main.java.com.pro100v1ad3000.network.client.NetworkClient;
 import main.java.com.pro100v1ad3000.network.packets.PlayerMovePacket;
 import main.java.com.pro100v1ad3000.network.packets.ReconnectPacket;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
+import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
@@ -28,6 +31,11 @@ public class GameStateManager {
     private static final int MAX_RECONNECT_ATTEMPTS = 5;
     private static final int RECONNECT_DELAY_MS = 5000;
 
+    private final InputManager inputManager;
+
+    public GameStateManager(InputManager inputManager) {
+        this.inputManager = inputManager;
+    }
 
     public void initSinglePlayer() { // Инициирует одиночную игру
         // Инициализирует игру в режиме одного игрока
@@ -140,10 +148,39 @@ public class GameStateManager {
         return new Random().nextInt(1000) + 1;
     }
 
+    private void processInput(float deltaTime) {
+        // Обработка клавиатуры
+        if(inputManager.isKeyPressed(KeyEvent.VK_W)) {
+
+        }
+
+        if(inputManager.isKeyPressed(KeyEvent.VK_A)) {
+
+        }
+
+        if(inputManager.isKeyPressed(KeyEvent.VK_S)) {
+
+        }
+
+        if(inputManager.isKeyPressed(KeyEvent.VK_D)) {
+
+        }
+
+        // Обработка мыши
+        if(inputManager.isMouseButtonPressed(MouseEvent.BUTTON1)) {
+            // Нажата левая кнопка
+        }
+
+        int mouseX = inputManager.getMouseX();
+        int mouseY = inputManager.getMouseY();
+
+        inputManager.endFrame();
+    }
+
     public void update(float deltaTime) { // тут ВСЯ ЛОГИКА
         // Обновляет состояние игры на основе времени, прошедшего с последнего кадра
         // Логика обновления состояния игры
-
+        processInput(deltaTime);
         players.values().forEach(player -> player.update(deltaTime));
 
     }

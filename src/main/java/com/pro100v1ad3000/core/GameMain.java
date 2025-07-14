@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.core;
 
+import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import javax.swing.*;
@@ -14,9 +15,11 @@ public class GameMain {
 
         SwingUtilities.invokeLater(() -> {
             // Инициализация компонентов
-            gameStateManager = new GameStateManager();
+
             gameWindow = new GameWindow();
             GamePanel gamePanel = gameWindow.getGamePanel();
+            InputManager inputManager = gamePanel.getInputManager();
+            gameStateManager = new GameStateManager(inputManager);
 
             // Создаем игровой цикл
             gameLoop = new GameLoop(gameStateManager, gamePanel);
