@@ -1,6 +1,7 @@
 package main.java.com.pro100v1ad3000.entities.players;
 
 import main.java.com.pro100v1ad3000.network.client.NetworkClient;
+import main.java.com.pro100v1ad3000.network.packets.PlayerConnectPacket;
 import main.java.com.pro100v1ad3000.network.packets.PlayerMovePacket;
 import main.java.com.pro100v1ad3000.network.packets.ReconnectPacket;
 
@@ -14,6 +15,12 @@ public class LocalPlayer extends Player {
 
         super(id, x, y);
         this.networkClient = networkClient;
+
+        if(networkClient != null && networkClient.isConnected()) {
+            // Отправляем пакет подключения сразу после создания
+            networkClient.sendPacket(new PlayerConnectPacket(id, x, y));
+            networkClient.sendPacket(new PlayerMovePacket(id, x, y));
+        }
 
     }
 

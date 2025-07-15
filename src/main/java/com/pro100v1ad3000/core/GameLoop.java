@@ -26,7 +26,7 @@ public class GameLoop {
     public void start() {
         running = true;
 
-        stateManager.initMultiplayer(true, "localhost");
+        stateManager.initMultiplayer(false, "localhost");
 
         // Поток рендеринга (60 FPS)
         renderThread = new Thread(this::renderLoop, "Render-Thread");

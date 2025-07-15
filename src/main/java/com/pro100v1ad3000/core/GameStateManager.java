@@ -4,9 +4,7 @@ import main.java.com.pro100v1ad3000.entities.players.LocalPlayer;
 import main.java.com.pro100v1ad3000.entities.players.Player;
 import main.java.com.pro100v1ad3000.entities.players.RemotePlayer;
 import main.java.com.pro100v1ad3000.network.client.NetworkClient;
-import main.java.com.pro100v1ad3000.network.packets.PlayerMovePacket;
-import main.java.com.pro100v1ad3000.network.packets.ReconnectPacket;
-import main.java.com.pro100v1ad3000.network.packets.ServerShutdownPacket;
+import main.java.com.pro100v1ad3000.network.packets.*;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.utils.Config;
@@ -16,10 +14,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class GameStateManager {
 
@@ -31,7 +29,7 @@ public class GameStateManager {
     private boolean isHost = false;
     private String serverAddress;
 
-    private static final int MAX_RECONNECT_ATTEMPTS = 5;
+    private static final int MAX_RECONNECT_ATTEMPTS = 8;
     private static final int RECONNECT_DELAY_MS = 5000;
 
     private final InputManager inputManager;
@@ -87,10 +85,8 @@ public class GameStateManager {
             localPlayer = new LocalPlayer(playerId, 0, 0, networkClient);
             players.put(localPlayer.getId(), localPlayer);
 
+            networkClient.sendPacket(new PlayerConnectPacket(playerId, 0, 0));
             Logger.info("Player connected to server id: " + playerId);
-            // Логика добавления игрока и отправки информации о новом игроке на сервер
-            networkClient.sendPacket(new PlayerMovePacket(playerId, 0, 0));
-
         } else {
             Logger.error("Failed to connect to server");
         }
@@ -99,10 +95,31 @@ public class GameStateManager {
     private void handleServerPacket(NetworkServer.ClientHandler client, Object packet) { // Обрабатывает пакет на сервере
         // Обрабатывает входящие пакеты на стороне сервера
         // Логика обработки пакетов от клиентов
-        if(packet instanceof PlayerMovePacket) {
+        if(packet instanceof PlayerConnectPacket) {
+            PlayerConnectPacket connectPacket = (PlayerConnectPacket) packet;
+            client.setPlayerId(connectPacket.getPlayerId());
+
+            if(localPlayer != null) {
+                updatePlayerPosition(connectPacket.getPlayerId(), connectPacket.getX(), connectPacket.getY());
+            }
+
+            networkServer.broadcast(packet, null);
+
+            // Можно сразу отправить список игроков новому клиенту
+            sendAllPlayersToClient(client);
+
+        } else if(packet instanceof PlayerMovePacket) {
             PlayerMovePacket movePacket = (PlayerMovePacket) packet;
+
+            if(client.getPlayerId() == null) {
+                client.setPlayerId(movePacket.getPlayerId());
+            }
+
             updatePlayerPosition(movePacket.getPlayerId(), movePacket.getX(), movePacket.getX());
             networkServer.broadcast(packet, client);
+        } else if (packet instanceof RequestPlayersPacket) {
+            // Отправляем новому клиенту список всех игроков
+             sendAllPlayersToClient(client);
         }
     }
 
@@ -110,18 +127,20 @@ public class GameStateManager {
         // Обрабатывает входящие пакеты на стороне клиента
         // Логика обработки пакетов от сервера
 
-        if (packet instanceof ServerShutdownPacket) {
-            Logger.info("Server is shutting down. Disconnection...");
-            // Можно уведомить пользователя
-            return;
-        }
-
         if(packet instanceof PlayerMovePacket) {
             PlayerMovePacket movePacket = (PlayerMovePacket) packet;
             updatePlayerPosition(movePacket.getPlayerId(), movePacket.getX(), movePacket.getY());
         } else if (packet instanceof ReconnectPacket) {
             ReconnectPacket reconnectPacket = (ReconnectPacket) packet;
             handleReconnect(reconnectPacket);
+
+        } else if (packet instanceof PlayersListPacket) {
+            // Получаем полный список игроков при подключении
+            PlayersListPacket listPacket = (PlayersListPacket) packet;
+            updatePlayersList(listPacket.getPlayers());
+        } else if (packet instanceof PlayerDisconnectedPacket) {
+            PlayerDisconnectedPacket discPacket = (PlayerDisconnectedPacket) packet;
+            players.remove(discPacket.getPlayerId());
         }
 
     }
@@ -134,16 +153,41 @@ public class GameStateManager {
         }
     }
 
-    private void updatePlayerPosition(int playerId, float x, float y) {
-        if(playerId == localPlayer.getId()) return;
+    private void sendAllPlayersToClient(NetworkServer.ClientHandler client) {
+        List<PlayerData> playersData = players.values().stream()
+                .map(p -> new PlayerData(p.getId(), p.getX(), p.getY()))
+                .collect(Collectors.toList());
+        client.sendPacket(new PlayersListPacket(playersData));
+    }
 
-        Player player = players.get(playerId);
-        if(player == null) {
-            player = new RemotePlayer(playerId, x, y);
-            players.put(playerId, player);
-        } else {
-            player.setPosition(x, y);
+    private void updatePlayersList(List<PlayerData> playersData) {
+        // Удаляем отсутствующих игроков
+        Set<Integer> currentIds = playersData.stream()
+                .map(PlayerData::getId)
+                .collect(Collectors.toSet());
+
+        players.keySet().removeIf(id -> !currentIds.contains(id) && id != localPlayer.getId());
+
+        // Добавляем/обновляем игроков
+        for(PlayerData data : playersData) {
+            if (data.getId() != localPlayer.getId()) {
+                updatePlayerPosition(data.getId(), data.getX(), data.getY());
+            }
         }
+
+    }
+
+    private void updatePlayerPosition(int playerId, float x, float y) {
+        if(localPlayer == null || playerId == localPlayer.getId()) return;
+
+        players.compute(playerId, (id, player) -> {
+           if(player == null) {
+               return new RemotePlayer(id, x, y);
+           } else {
+               player.setPosition(x, y);
+               return player;
+           }
+        });
     }
 
     private void onConnectionLost() { // Потеря соединения с сервером

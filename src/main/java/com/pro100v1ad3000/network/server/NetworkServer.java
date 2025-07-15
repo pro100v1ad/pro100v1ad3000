@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.network.server;
 
+import main.java.com.pro100v1ad3000.network.packets.PlayerDisconnectedPacket;
 import main.java.com.pro100v1ad3000.network.packets.ServerShutdownPacket;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
@@ -19,6 +20,7 @@ public class NetworkServer {
     private boolean isRunning = false;
     private final BiConsumer<ClientHandler, Object> packetHandler;
 
+
     public NetworkServer(int port, BiConsumer<ClientHandler, Object> packetHandler) {
 
         this.port = port;
@@ -34,12 +36,13 @@ public class NetworkServer {
         serverThread = new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(port);
+
                 isRunning = true;
                 Logger.info("Server started on port " + port);
 
                 while (isRunning) {
                     Socket clientSocket = serverSocket.accept();
-                    ClientHandler clientHandler = new ClientHandler(clientSocket);
+                    ClientHandler clientHandler = new ClientHandler(this, clientSocket);
                     clients.add(clientHandler);
                     clientHandler.start();
                 }
@@ -88,12 +91,23 @@ public class NetworkServer {
     public class ClientHandler extends Thread { // Сами клиенты
 
         private final Socket socket;
+        private final NetworkServer networkServer;
         private ObjectOutputStream out;
         private ObjectInputStream in;
         private boolean isConnected = false;
+        private Integer playerId;
 
-        public ClientHandler(Socket socket) {
+        public ClientHandler(NetworkServer networkServer, Socket socket) {
+            this.networkServer = networkServer;
             this.socket = socket;
+        }
+
+        public void setPlayerId(Integer playerId) {
+            this.playerId = playerId;
+        }
+
+        public Integer getPlayerId() {
+            return playerId;
         }
 
         @Override
@@ -137,10 +151,19 @@ public class NetworkServer {
             }
         }
 
+
         public void disconnect() { // отключение от сервера
             // Отключает клиента, закрывая сокет и удаляя его из списка клиентов
             isConnected = false;
             clients.remove(this);
+
+            // Уведомляем всех об отключении игрока
+            if(isRunning) {
+                if(playerId != null) {
+                    networkServer.broadcast(new PlayerDisconnectedPacket(playerId), null);
+                }
+            }
+
             try {
                 if(socket != null) socket.close();
             } catch (IOException e) {
