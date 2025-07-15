@@ -64,7 +64,7 @@ public class GameStateManager {
 
     private void startServer() { // Запускает сервер
         // Создает и запускает сервер на порту 12345 с обработчиком входящих пакетов
-        networkServer = new NetworkServer(12345, this::handleServerPacket);
+        networkServer = new NetworkServer(Config.SERVER_PORT, this::handleServerPacket);
         networkServer.start();
         Logger.info("Server started");
     }
@@ -87,6 +87,7 @@ public class GameStateManager {
 
             networkClient.sendPacket(new PlayerConnectPacket(playerId, 0, 0));
             Logger.info("Player connected to server id: " + playerId);
+
         } else {
             Logger.error("Failed to connect to server");
         }
@@ -285,10 +286,15 @@ public class GameStateManager {
 
     private void renderUI(Graphics2D g, int screenWidth, int screenHeight) {
         // Интерфейс можно рисовать без масштабирования, если нужны точные пиксельные размеры
+        if(isMultiplayer && networkClient != null) {
+            long ping = networkClient.getLastPing();
+            String pingText = ping >= 0 ? "Ping: " + ping + "ms" : "Ping: -";
 
-        g.setColor(Color.WHITE);
-        String text = (isHost) ? "Server" : "Client";
-        g.drawString(text, 20, 20);
+            g.setColor(Color.WHITE);
+            String text = (isHost) ? "Server" : "Client";
+            g.drawString(text, 20, 20);
+            g.drawString(pingText, screenWidth - 100, 20);
+        }
     }
 
     public void dispose() { // Отключение клиента и сервера

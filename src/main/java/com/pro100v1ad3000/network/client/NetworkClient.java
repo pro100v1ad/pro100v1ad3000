@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.network.client;
 
+import main.java.com.pro100v1ad3000.network.NetworkUtils;
 import main.java.com.pro100v1ad3000.network.packets.ServerShutdownPacket;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.utils.Logger;
@@ -26,6 +27,7 @@ public class NetworkClient {
     private final Consumer<Object> packetHandler;
     private final Runnable onDisconnectCallBack;
     private int reconnectAttempts;
+    private long lastPing = -1;
 
     public NetworkClient(String host, int port, int maxReconnectAttempts,
                          long reconnectDelayMs, Consumer<Object> packetHandler, Runnable onDisconnectCallBack) {
@@ -60,6 +62,7 @@ public class NetworkClient {
             reconnectAttempts = 0;
 
             startListening();
+            updatePing();
             Logger.info("Connected to server at " + host + ":" + port);
 
             return true;
@@ -163,9 +166,25 @@ public class NetworkClient {
         }
     }
 
+    private void updatePing() {
+        new Thread(() -> {
+           while (isConnected.get()) {
+               lastPing = NetworkUtils.measurePing(host, port);
+               try {
+                   Thread.sleep(5000);
+               } catch (InterruptedException e) {
+                   Thread.currentThread().interrupt();
+               }
+           }
+        }).start();
+    }
+
     public boolean isConnected() {
         // Возвращает текущее состояние соединения.
         return isConnected.get();
     }
 
+    public long getLastPing() {
+        return lastPing;
+    }
 }

@@ -6,9 +6,12 @@ src/
 │   │   └── com/
 │   │       └── pro100v1ad3000/
 │   │           ├── core/                  # Ядро игры
-│   │           │   ├── GameMain.java      # Точка входа
-│   │           │   ├── GameStateManager.java # Управление состояниями (меню, игра, пауза)
-│   │           │   └── AssetManager.java  # Загрузка текстур, моделей, звуков
+│   │           │   ├── AssetManager.java
+│   │           │   ├── GameMain.java
+│   │           │   ├── GameStateManager.java
+│   │           │   ├── GameLoop.java
+│   │           │   ├── GamePanel.java
+│   │           │   └── GameWindow.java
 │   │           │
 │   │           ├── network/               # Мультиплеер
 │   │           │   ├── client/            # Клиентская часть
@@ -18,9 +21,16 @@ src/
 │   │           │   │   ├── NetworkServer.java
 │   │           │   │   └── handlers/
 │   │           │   ├── packets/           # Сетевые пакеты (DTO)
+│   │           │   │   ├── PlayerConnectPacket.java
+│   │           │   │   ├── PlayerData.java
+│   │           │   │   ├── PlayerDisconnectedPacket.java
 │   │           │   │   ├── PlayerMovePacket.java
+│   │           │   │   ├── PlayersListPacket.java
+│   │           │   │   ├── ReconnectPacket.java
+│   │           │   │   ├── RequestPlayersPacket.java
+│   │           │   │   ├── ServerShutdownPacket.java
 │   │           │   │   └── ChatMessagePacket.java
-│   │           │   └── NetworkUtils.java  # Утилиты (сериализация, ping)
+│   │           │   └── NetworkUtils.java
 │   │           │
 │   │           ├── entities/              # Игровые сущности
 │   │           │   ├── players/           # Игроки (локальный/сетевой)
@@ -44,6 +54,7 @@ src/
 │   │           │
 │   │           ├── utils/                 # Утилиты
 │   │           │   ├── MathUtils.java     # Векторы, кватернионы
+│   │           │   ├── InputConstants.java
 │   │           │   ├── Logger.java        # Логирование
 │   │           │   └── Config.java        # Настройки графики/управления
 │   │           │
