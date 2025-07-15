@@ -95,13 +95,18 @@ public class NetworkServer {
                 in = new ObjectInputStream(socket.getInputStream());
                 isConnected = true;
 
-                while (isConnected) {
-                    Object packet = in.readObject();
-                    packetHandler.accept(this, packet);
+                while (isConnected && !Thread.currentThread().isInterrupted()) {
+                    try {
+                        Object packet = in.readObject();
+                        packetHandler.accept(this, packet);
+                    } catch (EOFException e) {
+                        // Нормальное завершение соединения
+                        break;
+                    }
                 }
 
             } catch (Exception e) {
-                if(isConnected) {
+                if(isConnected && !Thread.currentThread().isInterrupted()) {
                     Logger.error("Client error: " + e.getMessage());
                 }
             } finally {

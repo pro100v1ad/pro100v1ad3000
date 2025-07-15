@@ -26,7 +26,7 @@ public class GameLoop {
     public void start() {
         running = true;
 
-        stateManager.initMultiplayer(false, "localhost");
+        stateManager.initMultiplayer(true, "localhost");
 
         // Поток рендеринга (60 FPS)
         renderThread = new Thread(this::renderLoop, "Render-Thread");
@@ -44,8 +44,14 @@ public class GameLoop {
         running = false;
 
         try {
-            if (renderThread != null) renderThread.join();
-            if (updateThread != null) updateThread.join();
+            if (renderThread != null) {
+                renderThread.interrupt();
+                renderThread.join(100);
+            }
+            if (updateThread != null) {
+                updateThread.interrupt();
+                updateThread.join(100);
+            }
         } catch (InterruptedException e) {
             Logger.error("Error stopping game threads: " + e.getMessage());
             Thread.currentThread().interrupt();

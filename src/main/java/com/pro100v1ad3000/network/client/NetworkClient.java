@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.network.client;
 
+import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.io.IOException;
@@ -88,14 +89,14 @@ public class NetworkClient {
             } catch (Exception e) {
                 if(isConnected.get()) {
                     Logger.error("Connection error: " + e.getMessage());
-                    handleDisconnection();
+                    handleDisconnection(false);
                 }
             }
         });
         listenerThread.start();
     }
 
-    private void handleDisconnection() { // Потеря соединения, с попыткой переподключения
+    private void handleDisconnection(boolean isServerShutdown) { // Потеря соединения, с попыткой переподключения
         // Обрабатывает разрыв соединения: устанавливает флаг isConnected в false,
         // выполняет очистку ресурсов и вызывает callback-функцию отключения.
         // Запускает попытку переподключения в фоновом потоке.
@@ -104,13 +105,15 @@ public class NetworkClient {
         onDisconnectCallBack.run();
 
         // Попытка переподключения в фоновом режиме
-        new Thread(() -> {
-           if(connectInternal(true)) {
-               Logger.info("Reconnected successfully");
-           } else {
-               Logger.error("Failed to reconnect");
-           }
-        }).start();
+        if(!isServerShutdown) {
+            new Thread(() -> {
+                if (connectInternal(true)) {
+                    Logger.info("Reconnected successfully");
+                } else {
+                    Logger.error("Failed to reconnect");
+                }
+            }).start();
+        }
     }
 
     public void sendPacket(Object packet) { // Отправка объекта через сеть
@@ -123,7 +126,7 @@ public class NetworkClient {
             out.flush();
         } catch (IOException e) {
             Logger.error("Failed to send packet: " + e.getMessage());
-            handleDisconnection();
+            handleDisconnection(false);
         }
     }
 
@@ -136,13 +139,17 @@ public class NetworkClient {
     private void cleanup() { // Очистка всех открытых потоков и подключений
         // Выполняет очистку ресурсов: прерывает поток прослушивания и закрывает сокет, а также потоки ввода и вывода.
         try {
-            if(listenerThread != null) listenerThread.interrupt();
-            if(socket != null) socket.close();
+            if(listenerThread != null) {
+                listenerThread.interrupt();
+                listenerThread.join(100);
+            }
             if(out != null) out.close();
             if(in != null) in.close();
-
+            if(socket != null) socket.close();
         } catch (IOException e) {
             Logger.error("Error during cleanup: " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 

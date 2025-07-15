@@ -239,6 +239,7 @@ public class GameStateManager {
 
     public void dispose() { // Отключение клиента и сервера
         if(networkClient != null) networkClient.disconnect();
+
         if(networkServer != null) networkServer.stop();
     }
 
