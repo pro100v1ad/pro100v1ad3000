@@ -6,6 +6,7 @@ import main.java.com.pro100v1ad3000.entities.players.RemotePlayer;
 import main.java.com.pro100v1ad3000.network.client.NetworkClient;
 import main.java.com.pro100v1ad3000.network.packets.PlayerMovePacket;
 import main.java.com.pro100v1ad3000.network.packets.ReconnectPacket;
+import main.java.com.pro100v1ad3000.network.packets.ServerShutdownPacket;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.utils.Config;
@@ -109,6 +110,12 @@ public class GameStateManager {
         // Обрабатывает входящие пакеты на стороне клиента
         // Логика обработки пакетов от сервера
 
+        if (packet instanceof ServerShutdownPacket) {
+            Logger.info("Server is shutting down. Disconnection...");
+            // Можно уведомить пользователя
+            return;
+        }
+
         if(packet instanceof PlayerMovePacket) {
             PlayerMovePacket movePacket = (PlayerMovePacket) packet;
             updatePlayerPosition(movePacket.getPlayerId(), movePacket.getX(), movePacket.getY());
@@ -141,8 +148,11 @@ public class GameStateManager {
 
     private void onConnectionLost() { // Потеря соединения с сервером
         // Обрабатывает потерю соединения с сервером и предпринимает попытки переподключения
-        Logger.warn("Connection to server lost. Attempting to reconnect...");
-
+        if(isHost) {
+            Logger.warn("Server stopped");
+        } else {
+            Logger.warn("Connection to server lost");
+        }
         // Уведомить игрока об этом...
     }
 

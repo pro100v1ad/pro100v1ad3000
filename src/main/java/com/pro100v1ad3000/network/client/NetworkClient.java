@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.network.client;
 
+import main.java.com.pro100v1ad3000.network.packets.ServerShutdownPacket;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
@@ -84,6 +85,15 @@ public class NetworkClient {
             try {
                 while (isConnected.get()) {
                     Object packet = in.readObject();
+
+                    if(packet instanceof ServerShutdownPacket) {
+
+                        Logger.info("Server is shutting down. Disconnection...");
+                        handleDisconnection(true);
+                        return;
+
+                    }
+
                     packetHandler.accept(packet);
                 }
             } catch (Exception e) {
@@ -104,7 +114,7 @@ public class NetworkClient {
         cleanup();
         onDisconnectCallBack.run();
 
-        // Попытка переподключения в фоновом режиме
+        // Попытка переподключения только если сервер не выключился намеренно
         if(!isServerShutdown) {
             new Thread(() -> {
                 if (connectInternal(true)) {

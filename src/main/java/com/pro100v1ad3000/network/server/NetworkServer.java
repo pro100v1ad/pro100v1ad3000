@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.network.server;
 
+import main.java.com.pro100v1ad3000.network.packets.ServerShutdownPacket;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.io.*;
@@ -55,6 +56,15 @@ public class NetworkServer {
     public void stop() { // Останавливает сервер
         // Останавливает сервер, отключая всех клиентов и закрывая серверный сокет.
         isRunning = false;
+
+        broadcast(new ServerShutdownPacket(), null);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
         clients.forEach(ClientHandler::disconnect);
         clients.clear();
 
