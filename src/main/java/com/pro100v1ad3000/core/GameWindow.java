@@ -62,10 +62,17 @@ public class GameWindow extends JFrame {
     }
 
     private void toggleFullscreen() {
-        if(isFullscreen) {
-            exitFullscreen();
-        } else {
-            enterFullscreen();
+        gamePanel.setIgnoreRepaint(true);
+        try {
+            if (isFullscreen) {
+                exitFullscreen();
+            } else {
+                enterFullscreen();
+            }
+        } finally {
+            gamePanel.setIgnoreRepaint(false);
+            gamePanel.onResize();
+            gamePanel.requestFocusInWindow();
         }
         isFullscreen = !isFullscreen;
         gamePanel.onResize();
@@ -84,22 +91,26 @@ public class GameWindow extends JFrame {
         setUndecorated(true);
 
         // Устанавливаем полноэкранный режим
-        device.setFullScreenWindow(this);
+        if(device.isFullScreenSupported()) {
+            device.setFullScreenWindow(this);
+        } else {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
 
-        // Убедимся, что окно получило фокус
-        requestFocus();
+        validate();
 
         // Показываем окно снова
         setVisible(true);
     }
 
     private void exitFullscreen() {
-        // Выходим из полноэкранного режима
-        device.setFullScreenWindow(null);
 
-        // Делаем окно невидимым для изменения свойств
         setVisible(false);
         dispose();
+
+        if(device != null)  {
+            device.setFullScreenWindow(null);
+        }
         // Возвращаем декорации окна
         setUndecorated(false);
 
@@ -107,8 +118,7 @@ public class GameWindow extends JFrame {
         setSize(windowedSize);
         setLocationRelativeTo(null);
 
-        // Возвращаем фокус
-        requestFocus();
+        validate();
 
         // Показываем окно
         setVisible(true);
