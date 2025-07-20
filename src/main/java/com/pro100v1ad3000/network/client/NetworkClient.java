@@ -25,21 +25,19 @@ public class NetworkClient {
     private Thread listenerThread;
     private final AtomicBoolean isConnected = new AtomicBoolean(false);
     private final Consumer<Object> packetHandler;
-    private final Runnable onDisconnectCallBack;
     private int reconnectAttempts;
     private long lastPing = -1;
 
     public NetworkClient(String host, int port, int maxReconnectAttempts,
-                         long reconnectDelayMs, Consumer<Object> packetHandler, Runnable onDisconnectCallBack) {
+                         long reconnectDelayMs, Consumer<Object> packetHandler) {
         this.host = host;
         this.port = port;
         this.maxReconnectAttempts = maxReconnectAttempts;
         this.reconnectDelayMs = reconnectDelayMs;
         this.packetHandler = packetHandler;
-        this.onDisconnectCallBack = onDisconnectCallBack;
     }
 
-    public boolean connect() { // Подключаем клиент к серверу
+    public boolean connect() {
         // Устанавливает соединение с сервером, используя заданные параметры хоста и порта.
         // Возвращает true, если соединение успешно установлено, иначе false.
         return connectInternal(false);
@@ -62,7 +60,6 @@ public class NetworkClient {
             reconnectAttempts = 0;
 
             startListening();
-            updatePing();
             Logger.info("Connected to server at " + host + ":" + port);
 
             return true;
@@ -89,45 +86,19 @@ public class NetworkClient {
                 while (isConnected.get()) {
                     Object packet = in.readObject();
 
-                    if(packet instanceof ServerShutdownPacket) {
 
-                        Logger.info("Server is shutting down. Disconnection...");
-                        handleDisconnection(true);
-                        return;
-
-                    }
 
                     packetHandler.accept(packet);
                 }
             } catch (Exception e) {
                 if(isConnected.get()) {
                     Logger.error("Connection error: " + e.getMessage());
-                    handleDisconnection(false);
                 }
             }
         });
         listenerThread.start();
     }
 
-    private void handleDisconnection(boolean isServerShutdown) { // Потеря соединения, с попыткой переподключения
-        // Обрабатывает разрыв соединения: устанавливает флаг isConnected в false,
-        // выполняет очистку ресурсов и вызывает callback-функцию отключения.
-        // Запускает попытку переподключения в фоновом потоке.
-        isConnected.set(false);
-        cleanup();
-        onDisconnectCallBack.run();
-
-        // Попытка переподключения только если сервер не выключился намеренно
-        if(!isServerShutdown) {
-            new Thread(() -> {
-                if (connectInternal(true)) {
-                    Logger.info("Reconnected successfully");
-                } else {
-                    Logger.error("Failed to reconnect");
-                }
-            }).start();
-        }
-    }
 
     public void sendPacket(Object packet) { // Отправка объекта через сеть
         // Отправляет объект (пакет) через сетевое соединение, если оно активно.
@@ -139,7 +110,6 @@ public class NetworkClient {
             out.flush();
         } catch (IOException e) {
             Logger.error("Failed to send packet: " + e.getMessage());
-            handleDisconnection(false);
         }
     }
 
@@ -164,19 +134,6 @@ public class NetworkClient {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-    }
-
-    private void updatePing() {
-        new Thread(() -> {
-           while (isConnected.get()) {
-               lastPing = NetworkUtils.measurePing(host, port);
-               try {
-                   Thread.sleep(5000);
-               } catch (InterruptedException e) {
-                   Thread.currentThread().interrupt();
-               }
-           }
-        }).start();
     }
 
     public boolean isConnected() {

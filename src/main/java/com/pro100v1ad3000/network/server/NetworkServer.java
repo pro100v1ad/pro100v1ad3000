@@ -28,9 +28,8 @@ public class NetworkServer {
 
     }
 
-    public void start() { // Запускает сервер
-        // Запускает сервер на указанном порту в отдельном потоке.
-        // Если сервер уже запущен, метод завершает выполнение.
+    public void start() {
+
         if(isRunning) return;
 
         serverThread = new Thread(() -> {
@@ -56,8 +55,7 @@ public class NetworkServer {
         serverThread.start();
     }
 
-    public void stop() { // Останавливает сервер
-        // Останавливает сервер, отключая всех клиентов и закрывая серверный сокет.
+    public void stop() {
         isRunning = false;
 
         broadcast(new ServerShutdownPacket(), null);
@@ -78,7 +76,7 @@ public class NetworkServer {
         }
     }
 
-    public void broadcast(Object packet, ClientHandler exclude) { // рассылает всем клиентам пакеты
+    public void broadcast(Object packet, ClientHandler exclude) {
         // Рассылает пакет всем подключенным клиентам, кроме указанного в параметре exclude.
         for(ClientHandler client : clients) {
             if(client != exclude) {
@@ -102,16 +100,8 @@ public class NetworkServer {
             this.socket = socket;
         }
 
-        public void setPlayerId(Integer playerId) {
-            this.playerId = playerId;
-        }
-
-        public Integer getPlayerId() {
-            return playerId;
-        }
-
         @Override
-        public void run() { // для каждого клиента свой поток
+        public void run() {
             // Обрабатывает соединение с клиентом в отдельном потоке.
             // Читает входящие пакеты и передает их обработчику пакетов.
             try {
@@ -152,7 +142,7 @@ public class NetworkServer {
         }
 
 
-        public void disconnect() { // отключение от сервера
+        public void disconnect() {
             // Отключает клиента, закрывая сокет и удаляя его из списка клиентов
             isConnected = false;
             clients.remove(this);
