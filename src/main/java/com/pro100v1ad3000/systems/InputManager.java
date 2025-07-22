@@ -22,6 +22,19 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
         gamePanel.requestFocusInWindow();
     }
 
+    // Метод для сброса состояния всех клавиш и кнопок мыши
+    public void resetInputStates() {
+        // Сброс состояния клавиш
+        for (Integer keyCode : keyStates.keySet()) {
+            keyStates.put(keyCode, false);
+        }
+
+        // Сброс состояния кнопок мыши
+        for (Integer button : mouseButtonStates.keySet()) {
+            mouseButtonStates.put(button, false);
+        }
+    }
+
     // Проверка состояния клавиш
     public boolean isKeyPressed(int keyCode) {
         return keyStates.getOrDefault(keyCode, false);

@@ -1,5 +1,7 @@
 package main.java.com.pro100v1ad3000.core;
 
+import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
+import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
@@ -19,7 +21,9 @@ public class GameMain {
             gameWindow = new GameWindow();
             GamePanel gamePanel = gameWindow.getGamePanel();
             InputManager inputManager = gamePanel.getInputManager();
-            gameStateManager = new GameStateManager(inputManager);
+            AssetManager assetManager = new AssetManager();
+            LanguageManager languageManager = new LanguageManager();
+            gameStateManager = new GameStateManager(inputManager, assetManager);
 
             // Создаем игровой цикл
             gameLoop = new GameLoop(gameStateManager, gamePanel);
@@ -38,9 +42,9 @@ public class GameMain {
         if(gameLoop != null) {
             gameLoop.stop();
         }
-        if(gameStateManager != null) {
-            gameStateManager.dispose();
-        }
+//        if(gamePlayStateManager != null) {
+//            gamePlayStateManager.dispose();
+//        }
 
         Logger.shutdown();
     }

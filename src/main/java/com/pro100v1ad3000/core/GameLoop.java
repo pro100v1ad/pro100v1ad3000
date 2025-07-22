@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 public class GameLoop {
 
-    private final GameStateManager stateManager;
+    private final GameStateManager gameStateManager;
     private final GamePanel gamePanel;
     private Thread renderThread;
     private Thread updateThread;
@@ -18,8 +18,8 @@ public class GameLoop {
     private static final int TARGET_UPS = 20;
     private static final long NANOS_PER_SECOND = 1_000_000_000;
 
-    public GameLoop(GameStateManager stateManager, GamePanel gamePanel) {
-        this.stateManager = stateManager;
+    public GameLoop(GameStateManager gameStateManager, GamePanel gamePanel) {
+        this.gameStateManager = gameStateManager;
         this.gamePanel = gamePanel;
     }
 
@@ -125,7 +125,7 @@ public class GameLoop {
         // Рендерим игровой мир
         Graphics2D g = buffer.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        stateManager.render(g, currentSize.width, currentSize.height);
+        gameStateManager.render(g, currentSize.width, currentSize.height);
         g.dispose();
 
         // Обновляем панель
@@ -135,6 +135,6 @@ public class GameLoop {
     }
 
     private void update(float deltaTime) {
-        stateManager.update(deltaTime);
+        gameStateManager.update(deltaTime);
     }
 }
