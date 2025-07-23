@@ -3,6 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/pro100v1ad3000_jar</output-path>
     <root id="archive" name="pro100v1ad3000.jar">
       <element id="module-output" name="pro100v1ad3000" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jackson-databind-2.13.0-rc2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jackson-core-2.13.0-rc2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/jackson-annotations-2.13.0-rc2.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

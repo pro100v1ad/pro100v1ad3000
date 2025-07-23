@@ -3,6 +3,9 @@ package main.java.com.pro100v1ad3000.core;
 import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
+import main.java.com.pro100v1ad3000.ui.fonts.FontManager;
+import main.java.com.pro100v1ad3000.utils.Config;
+import main.java.com.pro100v1ad3000.utils.GameSettings;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import javax.swing.*;
@@ -18,12 +21,15 @@ public class GameMain {
         SwingUtilities.invokeLater(() -> {
             // Инициализация компонентов
 
+            GameSettings gameSettings = new GameSettings(Config.PATH_TO_GAME_PROPERTIES);
+
             gameWindow = new GameWindow();
             GamePanel gamePanel = gameWindow.getGamePanel();
             InputManager inputManager = gamePanel.getInputManager();
             AssetManager assetManager = new AssetManager();
             LanguageManager languageManager = new LanguageManager();
-            gameStateManager = new GameStateManager(inputManager, assetManager);
+            FontManager fontManager = new FontManager();
+            gameStateManager = new GameStateManager(inputManager, assetManager, languageManager);
 
             // Создаем игровой цикл
             gameLoop = new GameLoop(gameStateManager, gamePanel);

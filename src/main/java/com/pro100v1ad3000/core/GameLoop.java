@@ -135,6 +135,7 @@ public class GameLoop {
     }
 
     private void update(float deltaTime) {
-        gameStateManager.update(deltaTime);
+        Dimension currentSize = gamePanel.getCurrentSize();
+        gameStateManager.update(deltaTime, currentSize.width, currentSize.height);
     }
 }

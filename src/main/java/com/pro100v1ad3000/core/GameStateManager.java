@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.core;
 
+import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menus;
@@ -15,20 +16,22 @@ public class GameStateManager {
     private GamePlayStateManager gamePlayStateManager;
     private Menus menus;
 
-    private InputManager inputManager;
-    private AssetManager assetManager;
+    private final InputManager inputManager;
+    private final AssetManager assetManager;
+    private final LanguageManager languageManager;
 
-    public GameStateManager(InputManager inputManager, AssetManager assetManager) {
+    public GameStateManager(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager) {
         this.inputManager = inputManager;
         this.assetManager = assetManager;
-        gamePlayStateManager = new GamePlayStateManager(inputManager, assetManager);
-        menus = new Menus(inputManager, assetManager);
+        this.languageManager = languageManager;
+        gamePlayStateManager = new GamePlayStateManager(inputManager, assetManager, languageManager);
+        menus = new Menus(inputManager, assetManager, languageManager);
     }
 
-    public void update(float deltaTime) {
+    public void update(float deltaTime, int currentWidth, int currentHeight) {
         // Обновляет состояние игры на основе времени, прошедшего с последнего кадра
         if(!isActiveGame) { // Режим меню
-            menus.update();
+            menus.update(currentWidth, currentHeight);
         } else { // Активная игра
             gamePlayStateManager.update();
         }

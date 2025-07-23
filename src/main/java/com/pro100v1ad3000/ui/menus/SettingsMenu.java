@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.ui.menus;
 
+import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 
@@ -11,12 +12,14 @@ public class SettingsMenu {
 
     private final InputManager inputManager;
     private final AssetManager assetManager;
+    private final LanguageManager languageManager;
     private final Menus menus;
 
-    public SettingsMenu(InputManager inputManager, AssetManager assetManager, Menus menus) {
+    public SettingsMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
 
         this.inputManager = inputManager;
         this.assetManager = assetManager;
+        this.languageManager = languageManager;
         this.menus = menus;
 
         isVisible = false;
@@ -31,7 +34,7 @@ public class SettingsMenu {
         return isVisible;
     }
 
-    public void update() {
+    public void update(int currentWidth, int currentHeight) {
 
     }
 

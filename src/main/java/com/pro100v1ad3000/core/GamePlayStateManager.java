@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.core;
 
+import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.entities.players.LocalPlayer;
 import main.java.com.pro100v1ad3000.entities.players.Player;
@@ -30,10 +31,12 @@ public class GamePlayStateManager {
 
     private final InputManager inputManager;
     private final AssetManager assetManager;
+    private final LanguageManager languageManager;
 
-    public GamePlayStateManager(InputManager inputManager, AssetManager assetManager) {
+    public GamePlayStateManager(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager) {
         this.inputManager = inputManager;
         this.assetManager = assetManager;
+        this.languageManager = languageManager;
     }
 
     public void initSinglePlayer() {

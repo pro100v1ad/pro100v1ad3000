@@ -1,9 +1,14 @@
 package main.java.com.pro100v1ad3000.systems.language;
 
+import main.java.com.pro100v1ad3000.utils.Config;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -11,27 +16,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class LanguageManager {
 
-    /*
-    Я ему устанавливаю язык в game.properties,
-    а он дает мне весь текст нужного языка по ключу
-     */
-
     private String currentLanguage;
     private final Map<String, String> languageTexts;
 
     public LanguageManager() {
 
-        currentLanguage = "ru";
         languageTexts = new HashMap<>();
+        reloadLanguage();
 
     }
 
     public void reloadLanguage() {
         Properties properties = new Properties();
-        try (InputStream input = getClass().getResourceAsStream("/main/resources/config/game.properties")) {
-            if(input == null) {
-                throw new RuntimeException("Cannot find resource: /main/resources/config/game.properties");
-            }
+        Path path = Paths.get(Config.PATH_TO_GAME_PROPERTIES);
+        try (InputStream input = Files.newInputStream(path)) {
             properties.load(input);
             this.currentLanguage = properties.getProperty("language");
         } catch (IOException e) {
@@ -44,7 +42,8 @@ public class LanguageManager {
 
         try (InputStream input = getClass().getResourceAsStream(filePath)) {
             if(input == null) {
-                throw new RuntimeException("Cannot find resource: " + filePath);
+                Logger.warn("Cannot find resource: " + filePath);
+                return;
             }
             Map<String, String> texts = objectMapper.readValue(input, Map.class);
             languageTexts.putAll(texts);
@@ -54,7 +53,38 @@ public class LanguageManager {
 
     }
 
-    private String convertToResourcePath(String path) {
+    public void setLanguage(String language) {
+        this.currentLanguage = language;
+        saveLanguageToProperties();
+        reloadLanguage();
+        languageTexts.clear();
+    }
+
+    private void saveLanguageToProperties() {
+        Properties properties = new Properties();
+        Path propertiesPath = Paths.get(Config.PATH_TO_GAME_PROPERTIES);
+
+        // Загружаем существующие свойства из файла
+        try (InputStream input = Files.newInputStream(propertiesPath)) {
+            properties.load(input);
+        } catch (IOException e) {
+            Logger.error("Error loading properties: " + e.getMessage());
+            return; // Если не удалось загрузить, выходим из метода
+        }
+
+        // Изменяем только свойство language
+        properties.setProperty("language", currentLanguage);
+
+        // Сохраняем все свойства обратно в файл
+        try (OutputStream output = Files.newOutputStream(propertiesPath)) {
+            properties.store(output, "Language settings");
+        } catch (IOException e) {
+            Logger.error("Error saving language to properties: " + e.getMessage());
+        }
+    }
+
+
+    private String convertToResourcePath(String path) { // menu.startMenu.buttons.exit_button
 
         String[] parts = path.split("\\.");
 
@@ -62,16 +92,17 @@ public class LanguageManager {
             throw new IllegalArgumentException("Invalid input format. Expected format: 'texts.key'.");
         }
 
-        String filePath = parts[parts.length-2];
+        String filePath = "/main/resources/localized/" + currentLanguage + "/";
 
+        for(int i = 0; i < parts.length - 2; i++) {
+            filePath += parts[i] + "/";
+        }
 
-        return "/main/resources/localized/" + currentLanguage + "/" + filePath.replace(".", "/") + ".json";
+        filePath += parts[parts.length-2].replace(".", "/") + ".json";
+
+        return filePath;
     }
 
-    /* Пример получения текста getText("texts.menu.start_button"),
-    где text.menu - путь к json файлу menu.json,
-    а start_button - полу в этом файле
-    */
     public String getText(String keyPath) {
 
         String key = keyPath.split("\\.")[keyPath.split("\\.").length-1];
@@ -84,6 +115,8 @@ public class LanguageManager {
         }
     }
 
-
+    public String getCurrentLanguage() {
+        return currentLanguage;
+    }
 
 }
