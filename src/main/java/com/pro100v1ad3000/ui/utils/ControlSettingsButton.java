@@ -7,19 +7,19 @@ import main.java.com.pro100v1ad3000.utils.Config;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class RoundedRectangleButton {
+
+public class ControlSettingsButton {
 
     private InputManager inputManager;
 
     private int rectX, rectY, rectWidth, rectHeight, cornerRadius;
-    private BufferedImage defaultImage, activeImage, pressedButton;
-    private boolean isDefaultButton, isActiveButton, isPressedButton;
+    private BufferedImage defaultImage, activeImage, highlightedButton;
+    private boolean isDefaultButton, isActiveButton, isHighlightedButton;
     private String text;
     private float fontSize;
     private Color textColor;
-    private boolean isActive;
 
-    public RoundedRectangleButton(InputManager inputManager, int rectX, int rectY, int rectWidth, int rectHeight, int cornerRadius, String defaultImageName, String activeImageName, String pressedImageName) {
+    public ControlSettingsButton(InputManager inputManager, int rectX, int rectY, int rectWidth, int rectHeight, int cornerRadius, String defaultImageName, String activeImageName, String pressedImageName) {
         this.rectX = rectX;
         this.rectY = rectY;
         this.rectWidth = rectWidth;
@@ -29,7 +29,6 @@ public class RoundedRectangleButton {
 
         this.inputManager = inputManager;
 
-        this.isActive = true;
 
     }
 
@@ -81,7 +80,6 @@ public class RoundedRectangleButton {
 
     private boolean isPointInRoundedRectangle(int mouseX, int mouseY) {
 
-        if(!isActive) return false;
 
         if(mouseX < rectX || mouseX > rectX + rectWidth || mouseY < rectY || mouseY > rectY + rectHeight) {
             return false;
@@ -119,10 +117,6 @@ public class RoundedRectangleButton {
         return rectHeight;
     }
 
-    public void setActive(boolean active) {
-        this.isActive = active;
-    }
-
     public boolean update(int currentWidth, int currentHeight) {
 
         int mouseX = inputManager.getMouseX();
@@ -139,24 +133,24 @@ public class RoundedRectangleButton {
             isDefaultButton = true;
         }
 
-        isPressedButton = inputManager.isMouseButtonPressed(1) && isActiveButton;
-        return isPressedButton;
+        if(!isHighlightedButton) {
+            isHighlightedButton = inputManager.isMouseButtonPressed(1) && isActiveButton;
+        }
+        return isHighlightedButton;
 
     }
 
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
 
-        if(isActive) {
-            if (isDefaultButton) g.drawImage(defaultImage, rectX, rectY, rectWidth, rectHeight, null);
-            if (isActiveButton) g.drawImage(defaultImage, rectX, rectY, rectWidth, rectHeight, null);
-            if (isPressedButton) g.drawImage(defaultImage, rectX, rectY, rectWidth, rectHeight, null);
+        if (isDefaultButton) g.drawImage(defaultImage, rectX, rectY, rectWidth, rectHeight, null);
+        if (isActiveButton) g.drawImage(defaultImage, rectX, rectY, rectWidth, rectHeight, null);
+        if (isHighlightedButton) g.drawImage(defaultImage, rectX, rectY, rectWidth, rectHeight, null);
 
-            if (isDefaultButton) drawButton(g, Color.WHITE, Color.BLUE, 2.0f);
-            if (isActiveButton) drawButton(g, Color.YELLOW, Color.BLUE, 2.0f);
-            if (isPressedButton) drawButton(g, Color.GRAY, Color.BLUE, 2.0f);
-        } else {
-            drawButton(g, Color.GRAY, Color.GRAY, 2.0f);
-        }
+        if (isDefaultButton) drawButton(g, Color.WHITE, Color.BLUE, 2.0f);
+        if (isActiveButton) drawButton(g, Color.YELLOW, Color.BLUE, 2.0f);
+        if (isHighlightedButton) drawButton(g, Color.GRAY, Color.BLUE, 2.0f);
+
+
         drawText(g);
     }
 

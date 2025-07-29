@@ -3,12 +3,14 @@ package main.java.com.pro100v1ad3000.systems;
 import main.java.com.pro100v1ad3000.core.GamePanel;
 
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InputManager implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
-
     private final ConcurrentHashMap<Integer, Boolean> keyStates = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Integer, Boolean> mouseButtonStates = new ConcurrentHashMap<>();
+    private StringBuilder typedChars = new StringBuilder();
     private int mouseX, mouseY;
     private int mouseScroll;
     private boolean isMouseWindow;
@@ -22,20 +24,27 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
         gamePanel.requestFocusInWindow();
     }
 
-    // Метод для сброса состояния всех клавиш и кнопок мыши
     public void resetInputStates() {
-        // Сброс состояния клавиш
         for (Integer keyCode : keyStates.keySet()) {
-            keyStates.put(keyCode, false);
+            // Не сбрасываем состояние служебных клавиш, таких как Shift
+            if (!isServiceKey(keyCode)) {
+                keyStates.put(keyCode, false);
+            }
         }
-
-        // Сброс состояния кнопок мыши
         for (Integer button : mouseButtonStates.keySet()) {
             mouseButtonStates.put(button, false);
         }
     }
 
-    // Проверка состояния клавиш
+    // Вспомогательный метод для проверки, является ли клавиша служебной
+    private boolean isServiceKey(int keyCode) {
+        return keyCode == KeyEvent.VK_SHIFT ||
+                keyCode == KeyEvent.VK_CONTROL ||
+                keyCode == KeyEvent.VK_ALT ||
+                keyCode == KeyEvent.VK_CAPS_LOCK;
+    }
+
+
     public boolean isKeyPressed(int keyCode) {
         return keyStates.getOrDefault(keyCode, false);
     }
@@ -60,12 +69,26 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
         return isMouseWindow;
     }
 
-    // Методы для обновления состояния (вызываются в конце кадра)
     public void endFrame() {
         mouseScroll = 0;
     }
 
-    // Реализация интерфейсов обработки событий
+    public List<Integer> getPressedKeyCodes() {
+        List<Integer> pressedKeyCodes = new ArrayList<>();
+        for (Integer keyCode : keyStates.keySet()) {
+            if (keyStates.get(keyCode)) {
+                pressedKeyCodes.add(keyCode);
+            }
+        }
+        return pressedKeyCodes;
+    }
+
+    public char[] getTypedChars() {
+        char[] chars = typedChars.toString().toCharArray();
+        typedChars.setLength(0);
+        return chars;
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         keyStates.put(e.getKeyCode(), true);
@@ -113,7 +136,15 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
         isMouseWindow = false;
     }
 
-    @Override public void keyTyped(KeyEvent e) {}
-    @Override public void mouseClicked(MouseEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (c != KeyEvent.CHAR_UNDEFINED && !Character.isISOControl(c)) {
+            typedChars.append(c);
+        }
+    }
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
 }

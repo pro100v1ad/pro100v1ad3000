@@ -10,6 +10,8 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.System.exit;
+
 public class StartMenu {
 
     private boolean isVisible;
@@ -94,12 +96,14 @@ public class StartMenu {
                             break;
                         }
                         case "multiplayerButton": {
+                            menus.showMultiplayerMenu();
                             break;
                         }
                         case "achievementsButton": {
                             break;
                         }
                         case "settingsButton": {
+                            menus.showSettingsMenu();
                             break;
                         }
                         case "languageButton": {
@@ -107,6 +111,7 @@ public class StartMenu {
                             break;
                         }
                         case "exitButton": {
+                            exit(0);
                             break;
                         }
                     }

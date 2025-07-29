@@ -138,4 +138,8 @@ public class GameLoop {
         Dimension currentSize = gamePanel.getCurrentSize();
         gameStateManager.update(deltaTime, currentSize.width, currentSize.height);
     }
+
+    public static int getTargetUps() {
+        return TARGET_UPS;
+    }
 }

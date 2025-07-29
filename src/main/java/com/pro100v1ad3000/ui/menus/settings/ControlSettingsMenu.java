@@ -1,16 +1,18 @@
-package main.java.com.pro100v1ad3000.ui.menus;
+package main.java.com.pro100v1ad3000.ui.menus.settings;
 
+import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
-import main.java.com.pro100v1ad3000.systems.InputManager;
+import main.java.com.pro100v1ad3000.ui.menus.Menus;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
 import main.java.com.pro100v1ad3000.utils.Config;
+import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SettingsMenu {
+public class ControlSettingsMenu {
 
     private boolean isVisible;
 
@@ -21,7 +23,7 @@ public class SettingsMenu {
 
     private Map<String, RoundedRectangleButton> buttons;
 
-    public SettingsMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
+    public ControlSettingsMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
 
         this.inputManager = inputManager;
         this.assetManager = assetManager;
@@ -33,7 +35,6 @@ public class SettingsMenu {
         isVisible = false;
 
         setButtons();
-
     }
 
     private void setButtons() {
@@ -47,28 +48,28 @@ public class SettingsMenu {
         int cornerRadius = 15;
 
         int curRectY = (int)(rectY - (float)rectHeight*1.2);
-        buttons.put("soundsButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("w_button", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
-        buttons.put("controlsButton", new RoundedRectangleButton(inputManager, rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("a_button", new RoundedRectangleButton(inputManager, rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*1.2);
-        buttons.put("videoSettingsButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("s_button", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*2.4);
-        buttons.put("languageButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("d_button", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
-        int curRectX = (int)(rectX - (float)(rectHeight * 1.1));
-        buttons.put("doneButton", new RoundedRectangleButton(inputManager, curRectX, curRectY, rectHeight, rectHeight, cornerRadius, null, null, null));
-        buttons.get("doneButton").setActive(false);
+        curRectY = (int)(rectY + (float)rectHeight*3.6);
+        buttons.put("doneButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+
         setButtonsText();
     }
 
     private void setButtonsText() {
-        buttons.get("soundsButton").setText(languageManager.getText("menu.settingsMenu.buttons.sounds_button"), 16, Color.BLUE);
-        buttons.get("controlsButton").setText(languageManager.getText("menu.settingsMenu.buttons.controls_button"), 16, Color.BLUE);
-        buttons.get("videoSettingsButton").setText(languageManager.getText("menu.settingsMenu.buttons.videoSettings_button"), 16, Color.BLUE);
-        buttons.get("languageButton").setText(languageManager.getText("menu.settingsMenu.buttons.language_button"), 16, Color.BLUE);
-        buttons.get("doneButton").setText(languageManager.getText("menu.settingsMenu.buttons.done_button"), 16, Color.BLUE);
+        buttons.get("w_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.w_button"), 16, Color.BLUE);
+        buttons.get("a_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.a_button"), 16, Color.BLUE);
+        buttons.get("s_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.s_button"), 16, Color.BLUE);
+        buttons.get("d_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.d_button"), 16, Color.BLUE);
+        buttons.get("doneButton").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.doneButton"), 16, Color.BLUE);
 
     }
 
@@ -82,33 +83,33 @@ public class SettingsMenu {
     }
 
     public void update(int currentWidth, int currentHeight) {
+
         if(buttons != null) {
             for (Map.Entry<String, RoundedRectangleButton> entry : buttons.entrySet()) {
                 RoundedRectangleButton button = entry.getValue();
                 if (button.update(currentWidth, currentHeight)) {
                     switch (entry.getKey()) {
-                        case "soundsButton": {
+                        case "w_button": {
                             break;
                         }
-                        case "controlsButton": {
-                            menus.showControlSettingsMenu();
+                        case "a_button": {
                             break;
                         }
-                        case "videoSettingsButton": {
+                        case "s_button": {
                             break;
                         }
-                        case "languageButton": {
-                            menus.showLanguageMenu();
+                        case "d_button": {
                             break;
                         }
                         case "doneButton": {
-                            menus.showStartMenu();
+                            menus.showSettingsMenu();
                             break;
                         }
                     }
                 }
             }
         }
+
     }
 
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
@@ -118,5 +119,6 @@ public class SettingsMenu {
             }
         }
     }
+
 
 }
