@@ -44,6 +44,9 @@ public class InputManager implements KeyListener, MouseListener, MouseMotionList
                 keyCode == KeyEvent.VK_CAPS_LOCK;
     }
 
+    public void resetKeyState(int keyCode) {
+        keyStates.put(keyCode, false);
+    }
 
     public boolean isKeyPressed(int keyCode) {
         return keyStates.getOrDefault(keyCode, false);

@@ -89,18 +89,56 @@ public class TextArea {
 
     public void update() {
         updateTextCursor();
+
+        boolean isCtrlPressed = inputManager.isKeyPressed(KeyEvent.VK_CONTROL);
+        boolean isShiftPressed = inputManager.isKeyPressed(KeyEvent.VK_SHIFT);
+
+
+        if (isShiftPressed) {
+            for (Integer keyCode : inputManager.getPressedKeyCodes()) {
+                if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
+                    handleShiftSelection(keyCode);
+                }
+            }
+        } else {
+            if (inputManager.isKeyPressed(KeyEvent.VK_LEFT)) {
+                moveCursorLeft();
+                resetSelection();
+            }
+            if (inputManager.isKeyPressed(KeyEvent.VK_RIGHT)) {
+                moveCursorRight();
+                resetSelection();
+            }
+        }
+
         handleKeyInput();
-        if (inputManager.isKeyPressed(KeyEvent.VK_RIGHT)) {
-            moveCursorRight();
-        }
-        if (inputManager.isKeyPressed(KeyEvent.VK_LEFT)) {
-            moveCursorLeft();
-        }
+
         if (inputManager.isKeyPressed(KeyEvent.VK_BACK_SPACE)) {
             handleBackspace();
         }
+
         if (inputManager.isKeyPressed(KeyEvent.VK_DELETE)) {
             handleDelete();
+        }
+
+        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_BACK_SPACE)) {
+            handleDeleteWord();
+        }
+
+        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_V)) {
+            handlePaste();
+        }
+        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_C)) {
+            handleCopy();
+            inputManager.resetKeyState(KeyEvent.VK_C);
+        }
+        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_X)) {
+            handleCut();
+            inputManager.resetKeyState(KeyEvent.VK_X);
+        }
+        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_A)) {
+            selectAllText();
+            inputManager.resetKeyState(KeyEvent.VK_A);
         }
     }
 
@@ -112,19 +150,22 @@ public class TextArea {
         boolean isCtrlPressed = inputManager.isKeyPressed(KeyEvent.VK_CONTROL);
 
         for (Integer keyCode : inputManager.getPressedKeyCodes()) {
-
             // Игнорируем ввод букв, если нажат Ctrl
             if (isCtrlPressed && isLetterKey(keyCode)) {
                 continue;
             }
-
             // Игнорируем сам Shift, чтобы не обрабатывать его как печатаемый символ
             if (keyCode == KeyEvent.VK_SHIFT) {
                 continue;
             }
 
-            for(char keyChar: inputManager.getTypedChars()) {
+            for (char keyChar : inputManager.getTypedChars()) {
                 if (text.length() < maxCharacters) {
+                    // Если есть выделенный текст, удаляем его перед вставкой нового символа
+                    if (selectionStart != selectionEnd) {
+                        deleteSelectedText();
+                    }
+
                     // Вставляем символ в позицию курсора
                     text = text.substring(0, posCursorCharacter) + keyChar + text.substring(posCursorCharacter);
                     posCursorCharacter++;
@@ -136,9 +177,9 @@ public class TextArea {
                     }
                 }
             }
-
         }
     }
+
 
     // Вспомогательный метод для проверки, является ли клавиша буквой
     private boolean isLetterKey(int keyCode) {
@@ -211,8 +252,9 @@ public class TextArea {
     }
 
     private void handleBackspace() {
-        if (posCursorCharacter > 0) {
-            // Удаляем символ
+        if (selectionStart != selectionEnd) {
+            deleteSelectedText();
+        } else if (posCursorCharacter > 0) {
             text = text.substring(0, posCursorCharacter - 1) + text.substring(posCursorCharacter);
             posCursorCharacter--;
             startVisibleTextPosition = Math.max(0, startVisibleTextPosition - 1);
@@ -225,18 +267,87 @@ public class TextArea {
         }
     }
 
+    private void handleDeleteWord() {
+        if (posCursorCharacter > 0) {
+            // Находим начало текущего слова
+            int wordStart = posCursorCharacter - 1;
+            while (wordStart >= 0 && !Character.isWhitespace(text.charAt(wordStart))) {
+                wordStart--;
+            }
+            wordStart++; // Перемещаемся на начало слова
+
+            // Удаляем слово
+            text = text.substring(0, wordStart) + text.substring(posCursorCharacter);
+            posCursorCharacter = wordStart;
+
+            // Обновляем видимую область текста
+            FontMetrics fm = getFontMetrics();
+            startVisibleTextPosition = Math.max(0, posCursorCharacter - calculateMaxVisibleCharsFromStartPos(fm) + 1);
+        }
+    }
+    //СДЕЛАТЬ ВЫДЕЛЕНИЕ ТЕКСТА ЕГО КОПИРОВАНИЕ ВЫРЕЗАНИЕ ВЫДЕЛЕННОЙ ОБЛАСТИ. ВЫДЕЛЕНИЕ ЧЕРЕЗ ШИФТ И СТРЕЛОЧКИ. И МОЖЕТ БЫТЬ ЕЩЕ ЧТО_ТО
+
+    private void selectAllText() {
+        selectionStart = 0;
+        selectionEnd = text.length() - 1;
+        isVisibleTextCursor = false;
+        currentTimeVisibleTextCursor = 0;
+    }
+
+    private void handleShiftSelection(int keyCode) {
+        if (selectionStart == -1) {
+            selectionStart = posCursorCharacter;
+        }
+
+        if (keyCode == KeyEvent.VK_LEFT && posCursorCharacter > 0) {
+            posCursorCharacter--;
+        } else if (keyCode == KeyEvent.VK_RIGHT && posCursorCharacter < text.length() - 1) {
+            posCursorCharacter++;
+        }
+
+        selectionEnd = posCursorCharacter;
+
+        isVisibleTextCursor = false;
+        currentTimeVisibleTextCursor = 0;
+    }
+
+    private void resetSelection() {
+        selectionStart = -1;
+        selectionEnd = -1;
+    }
+
     private void handlePaste() {
         try {
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            String pasteText = (String) clipboard.getData(DataFlavor.stringFlavor);
-            if (pasteText != null && text.length() + pasteText.length() <= maxCharacters) {
-                text = text.substring(0, posCursorCharacter) + pasteText + text.substring(posCursorCharacter);
-                posCursorCharacter += pasteText.length();
+            // Проверяем, доступен ли текстовый тип данных
+            if (clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+                String pasteText = (String) clipboard.getData(DataFlavor.stringFlavor);
+                if (pasteText != null) {
+                    // Удаляем выделенный текст перед вставкой
+                    if (selectionStart != selectionEnd) {
+                        deleteSelectedText();
+                    }
+
+                    // Проверяем, не превышает ли длина текста максимальное количество символов
+                    if (text.length() + pasteText.length() <= maxCharacters) {
+                        // Вставляем текст из буфера обмена в позицию курсора
+                        text = text.substring(0, posCursorCharacter) + pasteText + text.substring(posCursorCharacter);
+                        posCursorCharacter += pasteText.length();
+
+                        // Обновляем видимую область текста
+                        FontMetrics fm = getFontMetrics();
+                        if (posCursorCharacter >= startVisibleTextPosition + calculateMaxVisibleCharsFromStartPos(fm)) {
+                            startVisibleTextPosition = posCursorCharacter - calculateMaxVisibleCharsFromStartPos(fm) + 1;
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             Logger.error("Error pasting text: " + e.getMessage());
         }
     }
+
+
 
     private void handleCopy() {
         if (selectionStart != selectionEnd) {
@@ -260,21 +371,23 @@ public class TextArea {
             int end = Math.max(selectionStart, selectionEnd);
             text = text.substring(0, start) + text.substring(end);
             posCursorCharacter = start;
-            selectionStart = -1;
-            selectionEnd = -1;
+            resetSelection();
         }
     }
 
     private void drawSelectedText(Graphics2D g) {
-        if (selectionStart != selectionEnd) {
+        if (selectionStart != selectionEnd && selectionStart >= 0 && selectionEnd <= text.length()) {
             FontMetrics fm = g.getFontMetrics();
             int textHeight = fm.getHeight();
             int textX = posX;
             int textY = posY + textHeight;
+
             int start = Math.min(selectionStart, selectionEnd);
             int end = Math.max(selectionStart, selectionEnd);
+
             int startX = textX + fm.stringWidth(text.substring(startVisibleTextPosition, start));
             int endX = textX + fm.stringWidth(text.substring(startVisibleTextPosition, end));
+
             g.setColor(Color.BLUE);
             g.fillRect(startX, posY, endX - startX, textHeight);
             g.setColor(Color.WHITE);
@@ -325,6 +438,8 @@ public class TextArea {
         if (!text.endsWith(" ")) {
             text += " ";
         }
+        selectionStart = -1;
+        selectionEnd = -1;
         posCursorCharacter = Math.max(0, text.length() - 1);
     }
 }

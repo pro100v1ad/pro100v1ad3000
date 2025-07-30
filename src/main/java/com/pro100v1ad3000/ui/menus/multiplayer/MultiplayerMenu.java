@@ -34,7 +34,7 @@ public class MultiplayerMenu {
         this.menus = menus;
 
         buttons = new HashMap<>();
-        inputFields = new InputFields(inputManager, assetManager, 100, 100, 60, 30);
+        inputFields = new InputFields(inputManager, assetManager, 100, 100, 300, 30);
 
 
         isVisible = false;
