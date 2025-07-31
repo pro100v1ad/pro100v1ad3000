@@ -17,11 +17,11 @@ public class GameSettings {
     public GameSettings(String configFilePath) {
         this.configFilePath = Paths.get(configFilePath);
         this.properties = new Properties();
-        initializeConfigFile();
+        initializeFile();
         loadProperties();
     }
 
-    private void initializeConfigFile() {
+    private void initializeFile() {
         try {
             // Создаем директорию, если она не существует
             if (!Files.exists(configFilePath.getParent())) {
@@ -38,7 +38,7 @@ public class GameSettings {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error initializing configuration file: " + e.getMessage());
+            Logger.error("Error initializing game.properties file: " + e.getMessage());
         }
     }
 

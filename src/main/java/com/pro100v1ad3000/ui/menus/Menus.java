@@ -18,6 +18,7 @@ public class Menus {
     private final MultiplayerMenu multiplayerMenu;
 
     private final LanguageMenu languageMenu;
+    private final PlayerSettingsMenu playerSettingsMenu;
 
     //  Будут разные виды меню, но их всех объединяет этот класс
     public Menus(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager) {
@@ -29,7 +30,7 @@ public class Menus {
         multiplayerMenu = new MultiplayerMenu(inputManager, assetManager, languageManager, this);
 
         controlSettingsMenu = new ControlSettingsMenu(inputManager, assetManager, languageManager, this);
-
+        playerSettingsMenu = new PlayerSettingsMenu(inputManager, assetManager, languageManager, this);
 
         showStartMenu();
     }
@@ -40,6 +41,7 @@ public class Menus {
         languageMenu.setVisible(false);
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
+        playerSettingsMenu.setVisible(false);
         inputManager.resetInputStates();
     }
 
@@ -49,6 +51,7 @@ public class Menus {
         languageMenu.setVisible(true);
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
+        playerSettingsMenu.setVisible(false);
         inputManager.resetInputStates();
     }
 
@@ -58,6 +61,7 @@ public class Menus {
         languageMenu.setVisible(false);
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
+        playerSettingsMenu.setVisible(false);
         inputManager.resetInputStates();
     }
 
@@ -67,6 +71,7 @@ public class Menus {
         languageMenu.setVisible(false);
         controlSettingsMenu.setVisible(true);
         multiplayerMenu.setVisible(false);
+        playerSettingsMenu.setVisible(false);
         inputManager.resetInputStates();
     }
 
@@ -76,6 +81,17 @@ public class Menus {
         languageMenu.setVisible(false);
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(true);
+        playerSettingsMenu.setVisible(false);
+        inputManager.resetInputStates();
+    }
+
+    public void showPlayerSettingsMenu() {
+        startMenu.setVisible(false);
+        settingsMenu.setVisible(false);
+        languageMenu.setVisible(false);
+        controlSettingsMenu.setVisible(false);
+        multiplayerMenu.setVisible(false);
+        playerSettingsMenu.setVisible(true);
         inputManager.resetInputStates();
     }
 
@@ -86,6 +102,7 @@ public class Menus {
         if(multiplayerMenu.isVisible()) multiplayerMenu.update(currentWidth, currentHeight);
 
         if(controlSettingsMenu.isVisible()) controlSettingsMenu.update(currentWidth, currentHeight);
+        if(playerSettingsMenu.isVisible()) playerSettingsMenu.update(currentWidth, currentHeight);
     }
 
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
@@ -95,7 +112,13 @@ public class Menus {
         if(multiplayerMenu.isVisible()) multiplayerMenu.draw(g, currentWidth, currentHeight);
 
         if(controlSettingsMenu.isVisible()) controlSettingsMenu.draw(g, currentWidth, currentHeight);
+        if(playerSettingsMenu.isVisible()) playerSettingsMenu.draw(g, currentWidth, currentHeight);
 
+
+    }
+
+    public void dispose() {
+        startMenu.dispose();
     }
 
 }

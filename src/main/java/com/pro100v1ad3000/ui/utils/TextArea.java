@@ -1,6 +1,5 @@
 package main.java.com.pro100v1ad3000.ui.utils;
 
-import javafx.scene.input.KeyCode;
 import main.java.com.pro100v1ad3000.core.GameLoop;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.fonts.FontManager;
@@ -71,6 +70,10 @@ public class TextArea {
 
     public void setCursorBlinkingFrequency(int cursorBlinkingFrequency) {
         this.cursorBlinkingFrequency = cursorBlinkingFrequency;
+    }
+
+    public String getText() {
+        return text;
     }
 
     private void updateTextCursor() {

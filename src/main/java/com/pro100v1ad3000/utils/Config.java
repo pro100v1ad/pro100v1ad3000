@@ -10,5 +10,6 @@ public class Config {
     public static final float TARGET_ASPECT = 4.0f / 3.0f;
     public static boolean START_FULLSCREEN = false;
     public static final String PATH_TO_GAME_PROPERTIES = "settings/game.properties";
+    public static final String PATH_TO_PLAYER_SETTINGS_JSON = "settings/player/playerSettings.json";
 
 }

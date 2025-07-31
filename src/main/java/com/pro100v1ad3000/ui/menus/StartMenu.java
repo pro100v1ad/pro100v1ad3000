@@ -3,6 +3,7 @@ package main.java.com.pro100v1ad3000.ui.menus;
 import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
+import main.java.com.pro100v1ad3000.ui.menus.playerSettings.PlayerSettings;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
 import main.java.com.pro100v1ad3000.utils.Config;
 
@@ -23,6 +24,8 @@ public class StartMenu {
 
     private Map<String, RoundedRectangleButton> buttons;
 
+    private PlayerSettings playerSettings;
+
     public StartMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
 
         this.inputManager = inputManager;
@@ -31,6 +34,8 @@ public class StartMenu {
         this.menus = menus;
 
         buttons = new HashMap<>();
+
+        playerSettings = new PlayerSettings(inputManager, assetManager, Config.BASE_WIDTH*3/4, Config.BASE_HEIGHT*3/4, Config.BASE_WIDTH/5, Config.BASE_HEIGHT/5);
 
         isVisible = false;
 
@@ -119,6 +124,8 @@ public class StartMenu {
             }
         }
 
+        playerSettings.update();
+
     }
 
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
@@ -127,6 +134,12 @@ public class StartMenu {
                 button.draw(g, currentWidth, currentHeight);
             }
         }
+
+        playerSettings.draw(g);
+    }
+
+    public void dispose() {
+        playerSettings.dispose();
     }
 
 }

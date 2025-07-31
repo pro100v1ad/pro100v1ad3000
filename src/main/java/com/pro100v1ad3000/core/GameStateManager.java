@@ -64,7 +64,9 @@ public class GameStateManager {
 
     }
 
-
+    public void dispose() {
+        menus.dispose();
+    }
 
 
 }

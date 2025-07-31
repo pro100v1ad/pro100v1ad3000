@@ -1,0 +1,11 @@
+{
+  "defaultPlayer": {
+    "nickname": "unknown",
+    "playerSkin": {
+      "headColor": "beige",
+      "bodyColor": "beige",
+      "handColor": "beige"
+    },
+    "isActive" : true
+  }
+}

@@ -51,6 +51,9 @@ public class GameMain {
 //        if(gamePlayStateManager != null) {
 //            gamePlayStateManager.dispose();
 //        }
+        if(gameStateManager != null) {
+            gameStateManager.dispose();
+        }
 
         Logger.shutdown();
     }
