@@ -73,7 +73,7 @@ public class TextArea {
     }
 
     public String getText() {
-        return text;
+        return text.trim();
     }
 
     private void updateTextCursor() {
@@ -445,4 +445,5 @@ public class TextArea {
         selectionEnd = -1;
         posCursorCharacter = Math.max(0, text.length() - 1);
     }
+
 }

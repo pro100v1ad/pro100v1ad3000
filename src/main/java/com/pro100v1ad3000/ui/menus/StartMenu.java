@@ -35,7 +35,7 @@ public class StartMenu {
 
         buttons = new HashMap<>();
 
-        playerSettings = new PlayerSettings(inputManager, assetManager, Config.BASE_WIDTH*3/4, Config.BASE_HEIGHT*3/4, Config.BASE_WIDTH/5, Config.BASE_HEIGHT/5);
+        playerSettings = new PlayerSettings(inputManager, assetManager, Config.BASE_WIDTH*3/4, Config.BASE_HEIGHT*2/5, Config.BASE_WIDTH/5, Config.BASE_HEIGHT/2);
 
         isVisible = false;
 
@@ -124,7 +124,7 @@ public class StartMenu {
             }
         }
 
-        playerSettings.update();
+        playerSettings.update(currentWidth, currentHeight);
 
     }
 
@@ -135,11 +135,8 @@ public class StartMenu {
             }
         }
 
-        playerSettings.draw(g);
+        playerSettings.draw(g, currentWidth, currentHeight);
     }
 
-    public void dispose() {
-        playerSettings.dispose();
-    }
 
 }

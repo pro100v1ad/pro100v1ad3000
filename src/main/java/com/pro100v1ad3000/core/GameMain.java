@@ -4,6 +4,7 @@ import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.fonts.FontManager;
+import main.java.com.pro100v1ad3000.ui.menus.playerSettings.utils.PlayerSettingsManager;
 import main.java.com.pro100v1ad3000.utils.Config;
 import main.java.com.pro100v1ad3000.utils.GameSettings;
 import main.java.com.pro100v1ad3000.utils.Logger;
@@ -15,6 +16,8 @@ public class GameMain {
     private GameWindow gameWindow;
     private GameLoop gameLoop;
     private GameStateManager gameStateManager;
+
+    private PlayerSettingsManager playerSettingsManager;
 
     public void start() {
 
@@ -29,6 +32,7 @@ public class GameMain {
             AssetManager assetManager = new AssetManager();
             LanguageManager languageManager = new LanguageManager();
             FontManager fontManager = new FontManager();
+            playerSettingsManager = new PlayerSettingsManager();
             gameStateManager = new GameStateManager(inputManager, assetManager, languageManager);
 
             // Создаем игровой цикл
@@ -51,8 +55,8 @@ public class GameMain {
 //        if(gamePlayStateManager != null) {
 //            gamePlayStateManager.dispose();
 //        }
-        if(gameStateManager != null) {
-            gameStateManager.dispose();
+        if(playerSettingsManager != null) {
+            playerSettingsManager.dispose();
         }
 
         Logger.shutdown();

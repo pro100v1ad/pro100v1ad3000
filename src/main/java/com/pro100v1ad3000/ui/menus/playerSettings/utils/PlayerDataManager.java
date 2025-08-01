@@ -16,6 +16,14 @@ public class PlayerDataManager {
         handColor = "beige";
     }
 
+    public PlayerDataManager(String nickname) {
+        this.nickname = nickname;
+
+        headColor = "beige";
+        bodyColor = "beige";
+        handColor = "beige";
+    }
+
     public PlayerDataManager(String nickname, String headColor, String bodyColor, String handColor) {
         this.nickname = nickname;
 

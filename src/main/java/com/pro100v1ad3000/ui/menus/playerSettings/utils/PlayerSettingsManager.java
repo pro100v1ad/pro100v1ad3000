@@ -19,14 +19,10 @@ public class PlayerSettingsManager {
     private final String PATH_TO_SAVE_PLAYER_SETTINGS = Config.PATH_TO_PLAYER_SETTINGS_JSON;
     private final Path configFilePath;
 
-    private final Map<Integer, PlayerDataManager> playersDataMap;
-    private final Map<Integer, Boolean> playersActiveStatus;
-
+    private static final Map<Integer, PlayerDataManager> playersDataMap = new HashMap<>();
+    private static final Map<Integer, Boolean> playersActiveStatus = new HashMap<>();
 
     public PlayerSettingsManager() {
-
-        this.playersDataMap = new HashMap<>();
-        this.playersActiveStatus = new HashMap<>();
 
         this.configFilePath = Paths.get(PATH_TO_SAVE_PLAYER_SETTINGS);
 
@@ -90,10 +86,16 @@ public class PlayerSettingsManager {
 
         Path path = Paths.get(PATH_TO_SAVE_PLAYER_SETTINGS);
         try (InputStream input = Files.newInputStream(path)) {
+
+            if (Files.size(path) == 0) {
+                Logger.warn("The file is empty: " + path);
+                Files.write(path, "{}\n".getBytes()); // Записываем пустой JSON объект
+            }
+
             Map<String, Map<String, Object>> playersData = objectMapper.readValue(input, objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, HashMap.class));
 
             if (playersData.isEmpty()) { // Проверка на пустоту файла
-                Logger.warn("The file is empty: " + configFilePath);
+                Logger.warn("The file does not contain any records: " + configFilePath);
                 loadDefaultPlayer();
             }
 
@@ -129,14 +131,18 @@ public class PlayerSettingsManager {
 
                 playersDataMap.put(playerId, new PlayerDataManager(nickname, headColor, bodyColor, handColor));
                 playersActiveStatus.put(playerId, isActive);
+                if(isActive) setActivePlayer(playerId);
 
             }
 
             if(playersDataMap.isEmpty()) {
+
                 loadDefaultPlayer();
             }
 
+
         } catch (Exception e) {
+
             Logger.error("Error when downloading the player configuration file: " + e.getMessage());
         }
     }
@@ -161,41 +167,27 @@ public class PlayerSettingsManager {
                     continue;
                 }
 
-                int playerId = getPlayerId(entry.getKey());
-                while (playersDataMap.containsKey(playerId)) { // Проверка на уникальность id
-                    int newPlayerId = getPlayerId(entry.getKey());
-                    Logger.warn("re-creating the ID: " + playerId + " --> " + newPlayerId);
-                    playerId = newPlayerId;
-                }
-
-
                 Map<String, Object> playerInfo = entry.getValue();
 
                 String nickname = (String) playerInfo.get("nickname");
-
-                Logger.debug("load defaultPlayer id: " + playerId + ", nickname: " + nickname);
-
-                Boolean isActive = (Boolean) playerInfo.get("isActive");
-                if(isActive && playersActiveStatus.containsValue(true)) { // Проверка на уникальность значения true
-                    isActive = false;
-                }
 
                 Map<String, Object> playerSkin = (Map<String, Object>) playerInfo.get("playerSkin");
                 String headColor = (String) playerSkin.get("headColor");
                 String bodyColor = (String) playerSkin.get("bodyColor");
                 String handColor = (String) playerSkin.get("handColor");
 
-                playersDataMap.put(playerId, new PlayerDataManager(nickname, headColor, bodyColor, handColor));
-                playersActiveStatus.put(playerId, isActive);
-
+                addNewPlayer(new PlayerDataManager(nickname, headColor, bodyColor, handColor));
             }
-
         } catch (Exception e) {
             Logger.error("Error verifying the existence of the player's default configuration file: " + e.getMessage());
         }
     }
 
-    private int getPlayerId(String playerId) {
+    private static boolean hasActivePlayer() {
+        return playersActiveStatus.containsValue(true);
+    }
+
+    private static int getPlayerId(String playerId) {
 
         try {
             return Integer.parseInt(playerId);
@@ -236,6 +228,88 @@ public class PlayerSettingsManager {
             Logger.error("Error saving player data to file: " + e.getMessage());
         }
     }
+
+
+    private static PlayerDataManager getPlayerData(String nickname) {
+        for(PlayerDataManager player: playersDataMap.values()) {
+            if(player.getNickname().equals(nickname)) return player;
+        }
+        return null;
+    }
+
+    public static PlayerDataManager getPlayerData(int id) { // Решить проблему с этим добром
+        return playersDataMap.get(id);
+    }
+
+    public static PlayerDataManager getActivePlayerData() {
+        Integer playerId = getActivePlayerId(false);
+        if(playerId != null) {
+            return getPlayerData(playerId);
+        }
+        return null;
+    }
+
+    public static void setActivePlayer(int playerId) {
+        playersActiveStatus.replaceAll((k, v) -> false);
+        playersActiveStatus.put(playerId, true);
+        Logger.debug("The player with the id: " + playerId + " has become active");
+    }
+
+    public static synchronized PlayerDataManager getOrSetPlayerInfo(String nickname) {
+        // Сначала ищем существующего игрока с таким ником
+        for (Map.Entry<Integer, PlayerDataManager> entry : playersDataMap.entrySet()) {
+            if (entry.getValue().getNickname().equals(nickname)) {
+                setActivePlayer(entry.getKey());
+                return entry.getValue();
+            }
+        }
+
+        // Если игрок не найден - создаём нового
+        return addNewPlayer(new PlayerDataManager(nickname));
+    }
+
+    public static Integer getActivePlayerId(boolean flag) { // Рекурсивный метод, что пытается выдать id активного игрока
+        for (Map.Entry<Integer, Boolean> entry : playersActiveStatus.entrySet()) {
+            if (entry.getValue()) {
+                return entry.getKey();
+            }
+        }
+        Logger.error("There is no active player");
+        setFirstActivePlayerIfNoneActive();
+        if(!flag)getActivePlayerId(true);
+        return null;
+    }
+
+    public static PlayerDataManager addNewPlayer(PlayerDataManager playerDataManager){
+
+        for(PlayerDataManager player: playersDataMap.values()) {
+            if(player.getNickname().equals(playerDataManager.getNickname())) {
+                return player;
+            }
+        }
+
+        int playerId = getPlayerId("default");
+        while (playersDataMap.containsKey(playerId)) { // Проверка на уникальность id
+            int newPlayerId = getPlayerId("default");
+            Logger.warn("re-creating the ID: " + playerId + " --> " + newPlayerId);
+            playerId = newPlayerId;
+        }
+
+        playersDataMap.put(playerId, playerDataManager);
+        setActivePlayer(playerId);
+        Logger.debug("Added a player with id: " + playerId + " and nickname: " + playerDataManager.getNickname());
+        return playerDataManager;
+    }
+
+    private static void setFirstActivePlayerIfNoneActive() {
+        if (!hasActivePlayer()) {
+            for(int key : playersActiveStatus.keySet()) {
+                setActivePlayer(key);
+                break;
+            }
+        }
+    }
+
 
     public void dispose() {
         saveLoadPlayersData();

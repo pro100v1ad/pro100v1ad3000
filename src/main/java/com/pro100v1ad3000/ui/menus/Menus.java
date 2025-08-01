@@ -117,8 +117,4 @@ public class Menus {
 
     }
 
-    public void dispose() {
-        startMenu.dispose();
-    }
-
 }
