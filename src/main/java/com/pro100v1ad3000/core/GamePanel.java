@@ -12,22 +12,17 @@ public class GamePanel extends JPanel {
     private BufferedImage renderBuffer;
     private final Object bufferLock = new Object();
 
-    private InputManager inputManager;
-
     public GamePanel() {
         setPreferredSize(new Dimension(Config.BASE_WIDTH, Config.BASE_HEIGHT));
         setDoubleBuffered(false); // Используем свой буфер
-        inputManager = new InputManager(this);
         setFocusable(true);
+        InputManager.initialize(this);
     }
 
     public void onResize() {
         repaint();
     }
 
-    public InputManager getInputManager() {
-        return inputManager;
-    }
 
     public void updateBuffer(BufferedImage newBuffer) {
         synchronized (bufferLock) {

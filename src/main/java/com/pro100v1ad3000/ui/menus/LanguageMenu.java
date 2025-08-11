@@ -15,17 +15,11 @@ public class LanguageMenu {
 
     private boolean isVisible;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
     private final Menus menus;
 
     private Map<String, RoundedRectangleButton> buttons;
 
-    public LanguageMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
+    public LanguageMenu(Menus menus) {
         this.menus = menus;
 
         buttons = new HashMap<>();
@@ -46,19 +40,19 @@ public class LanguageMenu {
         int cornerRadius = 15;
 
         int curRectY = (int)(rectY - (float)rectHeight*1.2);
-        buttons.put("russianButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
-        buttons.put("englishButton", new RoundedRectangleButton(inputManager, rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("russianButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("englishButton", new RoundedRectangleButton(rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*1.2);
-        buttons.put("doneButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("doneButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         setButtonsText();
     }
 
     private void setButtonsText() {
-        buttons.get("russianButton").setText(languageManager.getText("menu.languageMenu.buttons.russian_button"), 16, Color.BLUE);
-        buttons.get("englishButton").setText(languageManager.getText("menu.languageMenu.buttons.english_button"), 16, Color.BLUE);
-        buttons.get("doneButton").setText(languageManager.getText("menu.languageMenu.buttons.done_button"), 16, Color.BLUE);
+        buttons.get("russianButton").setText(LanguageManager.getText("menu.languageMenu.buttons.russian_button"), 16, Color.BLUE);
+        buttons.get("englishButton").setText(LanguageManager.getText("menu.languageMenu.buttons.english_button"), 16, Color.BLUE);
+        buttons.get("doneButton").setText(LanguageManager.getText("menu.languageMenu.buttons.done_button"), 16, Color.BLUE);
 
     }
 
@@ -78,12 +72,12 @@ public class LanguageMenu {
             if(button.update(currentWidth, currentHeight)) {
                 switch (entry.getKey()) {
                     case "englishButton": {
-                        languageManager.setLanguage("en");
+                        LanguageManager.setLanguage("en");
                         menus.showLanguageMenu();
                         break;
                     }
                     case "russianButton": {
-                        languageManager.setLanguage("ru");
+                        LanguageManager.setLanguage("ru");
                         menus.showLanguageMenu();
                         break;
                     }

@@ -1,4 +1,4 @@
-package main.java.com.pro100v1ad3000.ui.menus.playerSettings.utils;
+package main.java.com.pro100v1ad3000.entities.players.utils;
 
 public class PlayerDataManager {
 

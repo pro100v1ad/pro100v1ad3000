@@ -14,20 +14,15 @@ public class PlayerSettingsMenu {
 
     private boolean isVisible;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
     private final Menus menus;
 
     private Map<String, RoundedRectangleButton> buttons;
 
 
 
-    public PlayerSettingsMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
+    public PlayerSettingsMenu(Menus menus) {
         this.menus = menus;
+
 
         buttons = new HashMap<>();
 

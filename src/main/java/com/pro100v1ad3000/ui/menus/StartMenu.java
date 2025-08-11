@@ -17,25 +17,19 @@ public class StartMenu {
 
     private boolean isVisible;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
     private final Menus menus;
 
     private Map<String, RoundedRectangleButton> buttons;
 
     private PlayerSettings playerSettings;
 
-    public StartMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
+    public StartMenu(Menus menus) {
 
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
         this.menus = menus;
 
         buttons = new HashMap<>();
 
-        playerSettings = new PlayerSettings(inputManager, assetManager, Config.BASE_WIDTH*3/4, Config.BASE_HEIGHT*2/5, Config.BASE_WIDTH/5, Config.BASE_HEIGHT/2);
+        playerSettings = new PlayerSettings(Config.BASE_WIDTH*3/4, Config.BASE_HEIGHT*2/5, Config.BASE_WIDTH/5, Config.BASE_HEIGHT/2);
 
         isVisible = false;
 
@@ -53,31 +47,31 @@ public class StartMenu {
         int cornerRadius = 15;
 
         int curRectY = (int)(rectY - (float)rectHeight*1.2);
-        buttons.put("singlePlayerButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("singlePlayerButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
-        buttons.put("multiplayerButton", new RoundedRectangleButton(inputManager, rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("multiplayerButton", new RoundedRectangleButton(rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*1.2);
-        buttons.put("achievementsButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("achievementsButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*2.4);
-        buttons.put("settingsButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("settingsButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         int curRectX = (int)(rectX - (float)(rectHeight * 1.1));
-        buttons.put("languageButton", new RoundedRectangleButton(inputManager, curRectX, curRectY, rectHeight, rectHeight, cornerRadius, null, null, null));
+        buttons.put("languageButton", new RoundedRectangleButton(curRectX, curRectY, rectHeight, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*3.6);
-        buttons.put("exitButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("exitButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         setButtonsText();
     }
 
     private void setButtonsText() {
-        buttons.get("singlePlayerButton").setText(languageManager.getText("menu.startMenu.buttons.singlePlayer_button"), 16, Color.BLUE);
-        buttons.get("multiplayerButton").setText(languageManager.getText("menu.startMenu.buttons.multiplayer_button"), 16, Color.BLUE);
-        buttons.get("achievementsButton").setText(languageManager.getText("menu.startMenu.buttons.achievements_button"), 16, Color.BLUE);
-        buttons.get("settingsButton").setText(languageManager.getText("menu.startMenu.buttons.settings_button"), 16, Color.BLUE);
-        buttons.get("exitButton").setText(languageManager.getText("menu.startMenu.buttons.exit_button"), 16, Color.BLUE);
+        buttons.get("singlePlayerButton").setText(LanguageManager.getText("menu.startMenu.buttons.singlePlayer_button"), 16, Color.BLUE);
+        buttons.get("multiplayerButton").setText(LanguageManager.getText("menu.startMenu.buttons.multiplayer_button"), 16, Color.BLUE);
+        buttons.get("achievementsButton").setText(LanguageManager.getText("menu.startMenu.buttons.achievements_button"), 16, Color.BLUE);
+        buttons.get("settingsButton").setText(LanguageManager.getText("menu.startMenu.buttons.settings_button"), 16, Color.BLUE);
+        buttons.get("exitButton").setText(LanguageManager.getText("menu.startMenu.buttons.exit_button"), 16, Color.BLUE);
 
     }
 

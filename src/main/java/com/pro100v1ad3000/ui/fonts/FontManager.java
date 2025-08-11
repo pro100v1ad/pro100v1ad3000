@@ -10,18 +10,15 @@ import java.util.Map;
 
 public class FontManager {
 
-    private static Map<String, Font> fonts;
+    private static Map<String, Font> fonts = new HashMap<>();;
 
-    public FontManager() {
-        fonts = new HashMap<>();
-
+    static  {
         fonts.put("defaultFont", loadFont("/main/resources/assets/fonts/defaultFont1.ttf"));
-
     }
 
-    private Font loadFont(String path) {
+    private static Font loadFont(String path) {
         try {
-            InputStream is = getClass().getResourceAsStream(path);
+            InputStream is = FontManager.class.getResourceAsStream(path);
             if (is != null) {
                 return Font.createFont(Font.TRUETYPE_FONT, is);
             }

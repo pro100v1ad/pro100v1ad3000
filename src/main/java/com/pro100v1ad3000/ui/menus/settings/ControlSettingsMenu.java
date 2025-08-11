@@ -1,12 +1,9 @@
 package main.java.com.pro100v1ad3000.ui.menus.settings;
 
-import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menus;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
 import main.java.com.pro100v1ad3000.utils.Config;
-import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -16,18 +13,12 @@ public class ControlSettingsMenu {
 
     private boolean isVisible;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
     private final Menus menus;
 
     private Map<String, RoundedRectangleButton> buttons;
 
-    public ControlSettingsMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
+    public ControlSettingsMenu(Menus menus) {
 
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
         this.menus = menus;
 
         buttons = new HashMap<>();
@@ -48,28 +39,28 @@ public class ControlSettingsMenu {
         int cornerRadius = 15;
 
         int curRectY = (int)(rectY - (float)rectHeight*1.2);
-        buttons.put("w_button", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("w_button", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
-        buttons.put("a_button", new RoundedRectangleButton(inputManager, rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("a_button", new RoundedRectangleButton(rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*1.2);
-        buttons.put("s_button", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("s_button", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*2.4);
-        buttons.put("d_button", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("d_button", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*3.6);
-        buttons.put("doneButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("doneButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         setButtonsText();
     }
 
     private void setButtonsText() {
-        buttons.get("w_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.w_button"), 16, Color.BLUE);
-        buttons.get("a_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.a_button"), 16, Color.BLUE);
-        buttons.get("s_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.s_button"), 16, Color.BLUE);
-        buttons.get("d_button").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.d_button"), 16, Color.BLUE);
-        buttons.get("doneButton").setText(languageManager.getText("menu.settingsMenu.controlMenu.buttons.doneButton"), 16, Color.BLUE);
+        buttons.get("w_button").setText(LanguageManager.getText("menu.settingsMenu.controlMenu.buttons.w_button"), 16, Color.BLUE);
+        buttons.get("a_button").setText(LanguageManager.getText("menu.settingsMenu.controlMenu.buttons.a_button"), 16, Color.BLUE);
+        buttons.get("s_button").setText(LanguageManager.getText("menu.settingsMenu.controlMenu.buttons.s_button"), 16, Color.BLUE);
+        buttons.get("d_button").setText(LanguageManager.getText("menu.settingsMenu.controlMenu.buttons.d_button"), 16, Color.BLUE);
+        buttons.get("doneButton").setText(LanguageManager.getText("menu.settingsMenu.controlMenu.buttons.doneButton"), 16, Color.BLUE);
 
     }
 

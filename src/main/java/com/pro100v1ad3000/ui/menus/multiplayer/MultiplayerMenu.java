@@ -1,8 +1,5 @@
 package main.java.com.pro100v1ad3000.ui.menus.multiplayer;
 
-import main.java.com.pro100v1ad3000.systems.InputManager;
-import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menus;
 import main.java.com.pro100v1ad3000.ui.utils.InputFields;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
@@ -17,24 +14,18 @@ public class MultiplayerMenu {
 
     private boolean isVisible;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
     private final Menus menus;
 
     private Map<String, RoundedRectangleButton> buttons;
     private InputFields inputFields;
 
 
-    public MultiplayerMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
+    public MultiplayerMenu(Menus menus) {
 
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
         this.menus = menus;
 
         buttons = new HashMap<>();
-        inputFields = new InputFields(inputManager, assetManager, 100, 100, 300, 30);
+        inputFields = new InputFields(100, 100, 300, 30);
 
 
         isVisible = false;

@@ -14,18 +14,12 @@ public class SettingsMenu {
 
     private boolean isVisible;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
     private final Menus menus;
 
     private Map<String, RoundedRectangleButton> buttons;
 
-    public SettingsMenu(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager, Menus menus) {
+    public SettingsMenu(Menus menus) {
 
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
         this.menus = menus;
 
         buttons = new HashMap<>();
@@ -47,28 +41,28 @@ public class SettingsMenu {
         int cornerRadius = 15;
 
         int curRectY = (int)(rectY - (float)rectHeight*1.2);
-        buttons.put("soundsButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("soundsButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
-        buttons.put("controlsButton", new RoundedRectangleButton(inputManager, rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("controlsButton", new RoundedRectangleButton(rectX, rectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*1.2);
-        buttons.put("videoSettingsButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("videoSettingsButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         curRectY = (int)(rectY + (float)rectHeight*2.4);
-        buttons.put("languageButton", new RoundedRectangleButton(inputManager, rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
+        buttons.put("languageButton", new RoundedRectangleButton(rectX, curRectY, rectWidth, rectHeight, cornerRadius, null, null, null));
 
         int curRectX = (int)(rectX - (float)(rectHeight * 1.1));
-        buttons.put("doneButton", new RoundedRectangleButton(inputManager, curRectX, curRectY, rectHeight, rectHeight, cornerRadius, null, null, null));
+        buttons.put("doneButton", new RoundedRectangleButton(curRectX, curRectY, rectHeight, rectHeight, cornerRadius, null, null, null));
         buttons.get("doneButton").setActive(false);
         setButtonsText();
     }
 
     private void setButtonsText() {
-        buttons.get("soundsButton").setText(languageManager.getText("menu.settingsMenu.buttons.sounds_button"), 16, Color.BLUE);
-        buttons.get("controlsButton").setText(languageManager.getText("menu.settingsMenu.buttons.controls_button"), 16, Color.BLUE);
-        buttons.get("videoSettingsButton").setText(languageManager.getText("menu.settingsMenu.buttons.videoSettings_button"), 16, Color.BLUE);
-        buttons.get("languageButton").setText(languageManager.getText("menu.settingsMenu.buttons.language_button"), 16, Color.BLUE);
-        buttons.get("doneButton").setText(languageManager.getText("menu.settingsMenu.buttons.done_button"), 16, Color.BLUE);
+        buttons.get("soundsButton").setText(LanguageManager.getText("menu.settingsMenu.buttons.sounds_button"), 16, Color.BLUE);
+        buttons.get("controlsButton").setText(LanguageManager.getText("menu.settingsMenu.buttons.controls_button"), 16, Color.BLUE);
+        buttons.get("videoSettingsButton").setText(LanguageManager.getText("menu.settingsMenu.buttons.videoSettings_button"), 16, Color.BLUE);
+        buttons.get("languageButton").setText(LanguageManager.getText("menu.settingsMenu.buttons.language_button"), 16, Color.BLUE);
+        buttons.get("doneButton").setText(LanguageManager.getText("menu.settingsMenu.buttons.done_button"), 16, Color.BLUE);
 
     }
 

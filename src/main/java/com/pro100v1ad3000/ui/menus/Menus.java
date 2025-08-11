@@ -1,7 +1,5 @@
 package main.java.com.pro100v1ad3000.ui.menus;
 
-import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.menus.multiplayer.MultiplayerMenu;
 import main.java.com.pro100v1ad3000.ui.menus.settings.ControlSettingsMenu;
@@ -9,8 +7,6 @@ import main.java.com.pro100v1ad3000.ui.menus.settings.ControlSettingsMenu;
 import java.awt.*;
 
 public class Menus {
-
-    private final InputManager inputManager;
 
     private final StartMenu startMenu;
     private final SettingsMenu settingsMenu;
@@ -21,16 +17,15 @@ public class Menus {
     private final PlayerSettingsMenu playerSettingsMenu;
 
     //  Будут разные виды меню, но их всех объединяет этот класс
-    public Menus(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager) {
-        this.inputManager = inputManager;
+    public Menus() {
 
-        startMenu = new StartMenu(inputManager, assetManager, languageManager, this);
-        settingsMenu = new SettingsMenu(inputManager, assetManager, languageManager, this);
-        languageMenu = new LanguageMenu(inputManager, assetManager, languageManager, this);
-        multiplayerMenu = new MultiplayerMenu(inputManager, assetManager, languageManager, this);
+        startMenu = new StartMenu(this);
+        settingsMenu = new SettingsMenu(this);
+        languageMenu = new LanguageMenu(this);
+        multiplayerMenu = new MultiplayerMenu(this);
 
-        controlSettingsMenu = new ControlSettingsMenu(inputManager, assetManager, languageManager, this);
-        playerSettingsMenu = new PlayerSettingsMenu(inputManager, assetManager, languageManager, this);
+        controlSettingsMenu = new ControlSettingsMenu(this);
+        playerSettingsMenu = new PlayerSettingsMenu(this);
 
         showStartMenu();
     }
@@ -42,7 +37,7 @@ public class Menus {
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
         playerSettingsMenu.setVisible(false);
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void showLanguageMenu() {
@@ -52,7 +47,7 @@ public class Menus {
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
         playerSettingsMenu.setVisible(false);
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void showSettingsMenu() {
@@ -62,7 +57,7 @@ public class Menus {
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
         playerSettingsMenu.setVisible(false);
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void showControlSettingsMenu() {
@@ -72,7 +67,7 @@ public class Menus {
         controlSettingsMenu.setVisible(true);
         multiplayerMenu.setVisible(false);
         playerSettingsMenu.setVisible(false);
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void showMultiplayerMenu() {
@@ -82,7 +77,7 @@ public class Menus {
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(true);
         playerSettingsMenu.setVisible(false);
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void showPlayerSettingsMenu() {
@@ -92,7 +87,7 @@ public class Menus {
         controlSettingsMenu.setVisible(false);
         multiplayerMenu.setVisible(false);
         playerSettingsMenu.setVisible(true);
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void update(int currentWidth, int currentHeight) {

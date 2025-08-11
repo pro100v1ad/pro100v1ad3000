@@ -9,23 +9,18 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class InputFields {
-
-    private InputManager inputManager;
-    private AssetManager assetManager;
     private TextArea textArea;
     private int posX, posY, width, height, cornerRadius;
     private boolean isDefaultImage, isActiveImage, isPressedImage;
 
     private boolean isActiveTextArea;
 
-    public InputFields(InputManager inputManager, AssetManager assetManager, int posX, int posY, int width, int height) {
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
+    public InputFields(int posX, int posY, int width, int height) {
         this.posX = posX;
         this.posY = posY;
         this.width = width;
         this.height = height;
-        this.textArea = new TextArea(inputManager, posX, posY, width, height);
+        this.textArea = new TextArea(posX, posY, width, height);
         this.isActiveTextArea = false;
         this.cornerRadius = 15;
     }
@@ -70,20 +65,20 @@ public class InputFields {
     public void update(int currentWidth, int currentHeight) {
         textArea.update();
 
-        int mouseX = inputManager.getMouseX();
-        int mouseY = inputManager.getMouseY();
+        int mouseX = InputManager.getMouseX();
+        int mouseY = InputManager.getMouseY();
 
         int scaleMouseX = (int) (mouseX / (currentWidth / (float) Config.BASE_WIDTH));
         int scaleMouseY = (int) (mouseY / (currentHeight / (float) Config.BASE_HEIGHT));
 
         boolean flag = isPointInRoundedRectangle(scaleMouseX, scaleMouseY);
-        if(flag && inputManager.isMouseButtonPressed(1)) {
+        if(flag && InputManager.isMouseButtonPressed(1)) {
             textArea.setActive(true);
             isActiveTextArea = true;
             isPressedImage = true;
             isActiveImage = false;
             isDefaultImage = false;
-        } else if(textArea.isActive() && inputManager.isMouseButtonPressed(1) && !flag || inputManager.isKeyPressed(KeyEvent.VK_ENTER)) {
+        } else if(textArea.isActive() && InputManager.isMouseButtonPressed(1) && !flag || InputManager.isKeyPressed(KeyEvent.VK_ENTER)) {
             textArea.setActive(false);
             isActiveTextArea = false;
             isPressedImage = false;
@@ -96,7 +91,7 @@ public class InputFields {
             isDefaultImage = true;
             isActiveImage = false;
         }
-        inputManager.resetInputStates();
+        InputManager.resetInputStates();
     }
 
     public void draw(Graphics2D g) {

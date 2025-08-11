@@ -1,4 +1,4 @@
-package main.java.com.pro100v1ad3000.ui.menus.playerSettings.utils;
+package main.java.com.pro100v1ad3000.entities.players.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.java.com.pro100v1ad3000.utils.Config;
@@ -116,8 +116,6 @@ public class PlayerSettingsManager {
                 Map<String, Object> playerInfo = entry.getValue();
 
                 String nickname = (String) playerInfo.get("nickname");
-
-                Logger.debug("load id: " + playerId + ", nickname: " + nickname);
 
                 Boolean isActive = (Boolean) playerInfo.get("isActive");
                 if(isActive && playersActiveStatus.containsValue(true)) { // Проверка на уникальность значения true
@@ -252,7 +250,6 @@ public class PlayerSettingsManager {
     public static void setActivePlayer(int playerId) {
         playersActiveStatus.replaceAll((k, v) -> false);
         playersActiveStatus.put(playerId, true);
-        Logger.debug("The player with the id: " + playerId + " has become active");
     }
 
     public static synchronized PlayerDataManager getOrSetPlayerInfo(String nickname) {
@@ -297,7 +294,6 @@ public class PlayerSettingsManager {
 
         playersDataMap.put(playerId, playerDataManager);
         setActivePlayer(playerId);
-        Logger.debug("Added a player with id: " + playerId + " and nickname: " + playerDataManager.getNickname());
         return playerDataManager;
     }
 

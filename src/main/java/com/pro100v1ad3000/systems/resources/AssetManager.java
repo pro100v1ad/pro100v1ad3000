@@ -5,26 +5,22 @@ import java.util.Map;
 
 public class AssetManager {
 
-    private Map<String, ResourceManager> resourceManagers;
+    private static final Map<String, ResourceManager> resourceManagers  = new HashMap<>();;
 
-    public AssetManager() {
-        resourceManagers = new HashMap<>();
-    }
-
-    public void addResourceManager(String key) {
+    public static void addResourceManager(String key) {
         ResourceManager resourceManager = loadResourceManager(key);
         if(resourceManager != null) resourceManagers.put(key, resourceManager);
     }
 
-    public ResourceManager getResourceManager(String key) {
+    public static ResourceManager getResourceManager(String key) {
         return resourceManagers.get(key);
     }
 
-    public void unloadResourceManager(String key) {
+    public static void unloadResourceManager(String key) {
         resourceManagers.remove(key);
     }
 
-    public ResourceManager loadResourceManager(String key) {
+    public static ResourceManager loadResourceManager(String key) {
         ResourceManager resourceManager;
 
         switch (key) {

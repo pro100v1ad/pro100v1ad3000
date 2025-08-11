@@ -9,8 +9,6 @@ import java.awt.image.BufferedImage;
 
 public class RoundedRectangleButton {
 
-    private InputManager inputManager;
-
     private int rectX, rectY, rectWidth, rectHeight, cornerRadius;
     private BufferedImage defaultImage, activeImage, pressedButton;
     private boolean isDefaultButton, isActiveButton, isPressedButton;
@@ -19,15 +17,13 @@ public class RoundedRectangleButton {
     private Color textColor;
     private boolean isActive;
 
-    public RoundedRectangleButton(InputManager inputManager, int rectX, int rectY, int rectWidth, int rectHeight, int cornerRadius, String defaultImageName, String activeImageName, String pressedImageName) {
+    public RoundedRectangleButton(int rectX, int rectY, int rectWidth, int rectHeight, int cornerRadius, String defaultImageName, String activeImageName, String pressedImageName) {
         this.rectX = rectX;
         this.rectY = rectY;
         this.rectWidth = rectWidth;
         this.rectHeight = rectHeight;
         this.cornerRadius = cornerRadius;
         loadImages(defaultImageName, activeImageName, pressedImageName);
-
-        this.inputManager = inputManager;
 
         this.isActive = true;
 
@@ -125,8 +121,8 @@ public class RoundedRectangleButton {
 
     public boolean update(int currentWidth, int currentHeight) {
 
-        int mouseX = inputManager.getMouseX();
-        int mouseY = inputManager.getMouseY();
+        int mouseX = InputManager.getMouseX();
+        int mouseY = InputManager.getMouseY();
 
         int scaleMouseX = (int) (mouseX / (currentWidth / (float) Config.BASE_WIDTH));
         int scaleMouseY = (int) (mouseY / (currentHeight / (float) Config.BASE_HEIGHT));
@@ -139,7 +135,7 @@ public class RoundedRectangleButton {
             isDefaultButton = true;
         }
 
-        isPressedButton = inputManager.isMouseButtonPressed(1) && isActiveButton;
+        isPressedButton = InputManager.isMouseButtonPressed(1) && isActiveButton;
         return isPressedButton;
 
     }

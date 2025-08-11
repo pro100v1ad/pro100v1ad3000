@@ -1,6 +1,5 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menus;
@@ -16,16 +15,12 @@ public class GameStateManager {
     private GamePlayStateManager gamePlayStateManager;
     private Menus menus;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
 
-    public GameStateManager(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager) {
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
-        gamePlayStateManager = new GamePlayStateManager(inputManager, assetManager, languageManager);
-        menus = new Menus(inputManager, assetManager, languageManager);
+
+    public GameStateManager() {
+
+        gamePlayStateManager = new GamePlayStateManager();
+        menus = new Menus();
     }
 
     public void update(float deltaTime, int currentWidth, int currentHeight) {

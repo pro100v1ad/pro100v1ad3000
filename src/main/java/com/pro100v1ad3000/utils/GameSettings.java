@@ -10,18 +10,16 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public class GameSettings {
-    private Properties properties;
-    private final Path configFilePath;
-    private final String defaultConfigFile = "/main/resources/config/defaultGame.properties";
+    private static final Properties properties = new Properties();
+    private static final Path configFilePath = Paths.get(Config.PATH_TO_GAME_PROPERTIES);
+    private static final String defaultConfigFile = "/main/resources/config/defaultGame.properties";
 
-    public GameSettings(String configFilePath) {
-        this.configFilePath = Paths.get(configFilePath);
-        this.properties = new Properties();
+    static  {
         initializeFile();
         loadProperties();
     }
 
-    private void initializeFile() {
+    private static void initializeFile() {
         try {
             // Создаем директорию, если она не существует
             if (!Files.exists(configFilePath.getParent())) {
@@ -30,7 +28,7 @@ public class GameSettings {
 
             // Копируем файл настроек по умолчанию, если его нет
             if (!Files.exists(configFilePath)) {
-                try (InputStream defaultConfigStream = getClass().getResourceAsStream(defaultConfigFile)) {
+                try (InputStream defaultConfigStream = GameSettings.class.getResourceAsStream(defaultConfigFile)) {
                     if (defaultConfigStream == null) {
                         throw new FileNotFoundException("Default configuration file not found in resources.");
                     }
@@ -42,39 +40,59 @@ public class GameSettings {
         }
     }
 
-    private void loadProperties() {
+    private static void loadProperties() {
         try (InputStream input = Files.newInputStream(configFilePath)) {
             properties.load(input);
         } catch (IOException ex) {
-            System.err.println("Error loading properties file: " + ex.getMessage());
+            Logger.error("Error loading properties file: " + ex.getMessage());
         }
     }
 
-    public String getProperty(String key) {
-        return properties.getProperty(key);
+    public static String getProperty(String key) {
+        // Пытаемся получить значение из текущих свойств
+        String value = properties.getProperty(key);
+        if (value == null) {
+            value = getDefaultProperty(key);
+        }
+        // Возвращаем найденное значение или пустую строку, если значение не найдено
+        return value != null ? value : "";
     }
 
-    public void setProperty(String key, String value) {
+    private static String getDefaultProperty(String key) {
+        Properties defaultProperties = new Properties();
+        try (InputStream input = GameSettings.class.getResourceAsStream(defaultConfigFile)) {
+            if (input == null) {
+                throw new IOException("Default configuration file not found in resources.");
+            }
+            defaultProperties.load(input);
+            return defaultProperties.getProperty(key);
+        } catch (IOException e) {
+            Logger.error("Error loading default properties: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static void setProperty(String key, String value) {
         properties.setProperty(key, value);
     }
 
-    public void saveProperties() {
+    public static void saveProperties() {
         try (OutputStream output = Files.newOutputStream(configFilePath)) {
             properties.store(output, "Game Settings");
         } catch (IOException ex) {
-            System.err.println("Error saving properties file: " + ex.getMessage());
+            Logger.error("Error saving properties file: " + ex.getMessage());
         }
     }
 
-    public void resetToDefault() {
-        try (InputStream defaultConfigStream = getClass().getResourceAsStream(defaultConfigFile)) {
+    public static void resetToDefault() {
+        try (InputStream defaultConfigStream = GameSettings.class.getResourceAsStream(defaultConfigFile)) {
             if (defaultConfigStream == null) {
                 throw new FileNotFoundException("Default configuration file not found in resources.");
             }
             properties.load(defaultConfigStream);
             saveProperties();
         } catch (IOException e) {
-            System.err.println("Error resetting to default properties: " + e.getMessage());
+            Logger.error("Error resetting to default properties: " + e.getMessage());
         }
     }
 }

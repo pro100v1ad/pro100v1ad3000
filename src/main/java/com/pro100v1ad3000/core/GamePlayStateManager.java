@@ -1,6 +1,5 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
 import main.java.com.pro100v1ad3000.entities.players.LocalPlayer;
 import main.java.com.pro100v1ad3000.entities.players.Player;
@@ -29,14 +28,8 @@ public class GamePlayStateManager {
     private static final int MAX_RECONNECT_ATTEMPTS = 8;
     private static final int RECONNECT_DELAY_MS = 5000;
 
-    private final InputManager inputManager;
-    private final AssetManager assetManager;
-    private final LanguageManager languageManager;
+    public GamePlayStateManager() {
 
-    public GamePlayStateManager(InputManager inputManager, AssetManager assetManager, LanguageManager languageManager) {
-        this.inputManager = inputManager;
-        this.assetManager = assetManager;
-        this.languageManager = languageManager;
     }
 
     public void initSinglePlayer() {

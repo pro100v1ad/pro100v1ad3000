@@ -22,14 +22,12 @@ public class TextArea {
     private int posCursorX;
     private Color textColor;
     private int fontSize;
-    private final InputManager inputManager;
     private int selectionStart, selectionEnd;
     private boolean isVisibleTextCursor;
     private int currentTimeVisibleTextCursor, cursorBlinkingFrequency;
 
-    public TextArea(InputManager inputManager, int posX, int posY, int width, int height) {
+    public TextArea(int posX, int posY, int width, int height) {
         this.isActive = false;
-        this.inputManager = inputManager;
         this.posX = posX;
         this.posY = posY;
         this.width = width;
@@ -93,22 +91,22 @@ public class TextArea {
     public void update() {
         updateTextCursor();
 
-        boolean isCtrlPressed = inputManager.isKeyPressed(KeyEvent.VK_CONTROL);
-        boolean isShiftPressed = inputManager.isKeyPressed(KeyEvent.VK_SHIFT);
+        boolean isCtrlPressed = InputManager.isKeyPressed(KeyEvent.VK_CONTROL);
+        boolean isShiftPressed = InputManager.isKeyPressed(KeyEvent.VK_SHIFT);
 
 
         if (isShiftPressed) {
-            for (Integer keyCode : inputManager.getPressedKeyCodes()) {
+            for (Integer keyCode : InputManager.getPressedKeyCodes()) {
                 if (keyCode == KeyEvent.VK_LEFT || keyCode == KeyEvent.VK_RIGHT) {
                     handleShiftSelection(keyCode);
                 }
             }
         } else {
-            if (inputManager.isKeyPressed(KeyEvent.VK_LEFT)) {
+            if (InputManager.isKeyPressed(KeyEvent.VK_LEFT)) {
                 moveCursorLeft();
                 resetSelection();
             }
-            if (inputManager.isKeyPressed(KeyEvent.VK_RIGHT)) {
+            if (InputManager.isKeyPressed(KeyEvent.VK_RIGHT)) {
                 moveCursorRight();
                 resetSelection();
             }
@@ -116,32 +114,32 @@ public class TextArea {
 
         handleKeyInput();
 
-        if (inputManager.isKeyPressed(KeyEvent.VK_BACK_SPACE)) {
+        if (InputManager.isKeyPressed(KeyEvent.VK_BACK_SPACE)) {
             handleBackspace();
         }
 
-        if (inputManager.isKeyPressed(KeyEvent.VK_DELETE)) {
+        if (InputManager.isKeyPressed(KeyEvent.VK_DELETE)) {
             handleDelete();
         }
 
-        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_BACK_SPACE)) {
+        if (isCtrlPressed && InputManager.isKeyPressed(KeyEvent.VK_BACK_SPACE)) {
             handleDeleteWord();
         }
 
-        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_V)) {
+        if (isCtrlPressed && InputManager.isKeyPressed(KeyEvent.VK_V)) {
             handlePaste();
         }
-        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_C)) {
+        if (isCtrlPressed && InputManager.isKeyPressed(KeyEvent.VK_C)) {
             handleCopy();
-            inputManager.resetKeyState(KeyEvent.VK_C);
+            InputManager.resetKeyState(KeyEvent.VK_C);
         }
-        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_X)) {
+        if (isCtrlPressed && InputManager.isKeyPressed(KeyEvent.VK_X)) {
             handleCut();
-            inputManager.resetKeyState(KeyEvent.VK_X);
+            InputManager.resetKeyState(KeyEvent.VK_X);
         }
-        if (isCtrlPressed && inputManager.isKeyPressed(KeyEvent.VK_A)) {
+        if (isCtrlPressed && InputManager.isKeyPressed(KeyEvent.VK_A)) {
             selectAllText();
-            inputManager.resetKeyState(KeyEvent.VK_A);
+            InputManager.resetKeyState(KeyEvent.VK_A);
         }
     }
 
@@ -149,10 +147,10 @@ public class TextArea {
 
     private void handleKeyInput() {
         // Обновляем состояние Shift
-        isShiftPressed = inputManager.isKeyPressed(KeyEvent.VK_SHIFT);
-        boolean isCtrlPressed = inputManager.isKeyPressed(KeyEvent.VK_CONTROL);
+        isShiftPressed = InputManager.isKeyPressed(KeyEvent.VK_SHIFT);
+        boolean isCtrlPressed = InputManager.isKeyPressed(KeyEvent.VK_CONTROL);
 
-        for (Integer keyCode : inputManager.getPressedKeyCodes()) {
+        for (Integer keyCode : InputManager.getPressedKeyCodes()) {
             // Игнорируем ввод букв, если нажат Ctrl
             if (isCtrlPressed && isLetterKey(keyCode)) {
                 continue;
@@ -162,7 +160,7 @@ public class TextArea {
                 continue;
             }
 
-            for (char keyChar : inputManager.getTypedChars()) {
+            for (char keyChar : InputManager.getTypedChars()) {
                 if (text.length() < maxCharacters) {
                     // Если есть выделенный текст, удаляем его перед вставкой нового символа
                     if (selectionStart != selectionEnd) {
