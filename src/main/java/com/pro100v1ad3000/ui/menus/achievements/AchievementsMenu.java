@@ -1,10 +1,10 @@
-package main.java.com.pro100v1ad3000.ui.menus.multiplayer;
+package main.java.com.pro100v1ad3000.ui.menus.achievements;
 
 import main.java.com.pro100v1ad3000.ui.menus.Menu;
 
 import java.awt.*;
 
-public class MultiplayerMenu extends Menu {
+public class AchievementsMenu extends Menu {
     @Override
     public void update(int currentWidth, int currentHeight) {
 

@@ -13,7 +13,7 @@ public class GamePanel extends JPanel {
     private final Object bufferLock = new Object();
 
     public GamePanel() {
-        setPreferredSize(new Dimension(Config.BASE_WIDTH, Config.BASE_HEIGHT));
+        setPreferredSize(new Dimension(Config.BASE_WINDOW_WIDTH, Config.BASE_WINDOW_HEIGHT));
         setDoubleBuffered(false); // Используем свой буфер
         setFocusable(true);
         InputManager.initialize(this);

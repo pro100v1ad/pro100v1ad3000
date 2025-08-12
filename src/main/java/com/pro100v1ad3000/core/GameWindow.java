@@ -11,9 +11,9 @@ public class GameWindow extends JFrame {
 
     private final GamePanel gamePanel;
     private boolean isFullscreen = false;
-    private GraphicsDevice device;
-    private final Dimension minSize = new Dimension(Config.MINIMUM_WIDTH, Config.MINIMUM_HEIGHT);
-    private Dimension windowedSize = new Dimension(Config.BASE_WIDTH, Config.BASE_HEIGHT);
+    private final GraphicsDevice device;
+    private final Dimension minSize = new Dimension(Config.MINIMUM_WINDOW_WIDTH, Config.MINIMUM_WINDOW_HEIGHT);
+    private Dimension windowedSize = new Dimension(Config.BASE_WINDOW_WIDTH, Config.BASE_WINDOW_HEIGHT);
 
 
     public GameWindow() {

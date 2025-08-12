@@ -1,6 +1,5 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.entities.players.utils.PlayerSettingsManager;
 import main.java.com.pro100v1ad3000.utils.Logger;
 

@@ -26,6 +26,7 @@ public class RoundedRectangleButton {
         loadImages(defaultImageName, activeImageName, pressedImageName);
 
         this.isActive = true;
+        this.isDefaultButton = true;
 
     }
 

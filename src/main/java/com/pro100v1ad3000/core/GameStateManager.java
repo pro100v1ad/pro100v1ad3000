@@ -1,8 +1,6 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
-import main.java.com.pro100v1ad3000.systems.InputManager;
-import main.java.com.pro100v1ad3000.ui.menus.Menus;
+import main.java.com.pro100v1ad3000.ui.menus.MenuManager;
 import main.java.com.pro100v1ad3000.utils.Config;
 
 import java.awt.*;
@@ -13,20 +11,20 @@ public class GameStateManager {
     private boolean isActiveGame;
 
     private GamePlayStateManager gamePlayStateManager;
-    private Menus menus;
+    private MenuManager menuManager;
 
 
 
     public GameStateManager() {
 
         gamePlayStateManager = new GamePlayStateManager();
-        menus = new Menus();
+        menuManager = new MenuManager();
     }
 
     public void update(float deltaTime, int currentWidth, int currentHeight) {
         // Обновляет состояние игры на основе времени, прошедшего с последнего кадра
         if(!isActiveGame) { // Режим меню
-            menus.update(currentWidth, currentHeight);
+            menuManager.update(currentWidth, currentHeight);
         } else { // Активная игра
             gamePlayStateManager.update();
         }
@@ -52,7 +50,7 @@ public class GameStateManager {
 
     private void draw(Graphics2D g, int currentWidth, int currentHeight) {
         if(!isActiveGame) { // Режим меню
-            menus.draw(g, currentWidth, currentHeight);
+            menuManager.draw(g, currentWidth, currentHeight);
         } else { // Активная игра
             gamePlayStateManager.draw(g, currentWidth, currentHeight);
         }

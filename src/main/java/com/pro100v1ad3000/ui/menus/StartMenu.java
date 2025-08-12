@@ -1,9 +1,6 @@
 package main.java.com.pro100v1ad3000.ui.menus;
 
 import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
-import main.java.com.pro100v1ad3000.systems.InputManager;
-import main.java.com.pro100v1ad3000.ui.menus.playerSettings.PlayerSettings;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
 import main.java.com.pro100v1ad3000.utils.Config;
 
@@ -13,26 +10,12 @@ import java.util.Map;
 
 import static java.lang.System.exit;
 
-public class StartMenu {
+public class StartMenu extends Menu{
 
-    private boolean isVisible;
+    private final Map<String, RoundedRectangleButton> buttons = new HashMap<>();
 
-    private final Menus menus;
-
-    private Map<String, RoundedRectangleButton> buttons;
-
-    private PlayerSettings playerSettings;
-
-    public StartMenu(Menus menus) {
-
-        this.menus = menus;
-
-        buttons = new HashMap<>();
-
-        playerSettings = new PlayerSettings(Config.BASE_WIDTH*3/4, Config.BASE_HEIGHT*2/5, Config.BASE_WIDTH/5, Config.BASE_HEIGHT/2);
-
-        isVisible = false;
-
+    public StartMenu() {
+        super();
         setButtons();
     }
 
@@ -75,62 +58,46 @@ public class StartMenu {
 
     }
 
-    public void setVisible(boolean isVisible) {
-        if(isVisible) setButtonsText();
-        this.isVisible = isVisible;
-    }
 
-    public boolean isVisible() {
-        return isVisible;
-    }
-
+    @Override
     public void update(int currentWidth, int currentHeight) {
-
-        if(buttons != null) {
-            for (Map.Entry<String, RoundedRectangleButton> entry : buttons.entrySet()) {
-                RoundedRectangleButton button = entry.getValue();
-                if (button.update(currentWidth, currentHeight)) {
-                    switch (entry.getKey()) {
-                        case "singlePlayerButton": {
-                            break;
-                        }
-                        case "multiplayerButton": {
-                            menus.showMultiplayerMenu();
-                            break;
-                        }
-                        case "achievementsButton": {
-                            break;
-                        }
-                        case "settingsButton": {
-                            menus.showSettingsMenu();
-                            break;
-                        }
-                        case "languageButton": {
-                            menus.showLanguageMenu();
-                            break;
-                        }
-                        case "exitButton": {
-                            exit(0);
-                            break;
-                        }
+        for (Map.Entry<String, RoundedRectangleButton> entry : buttons.entrySet()) {
+            RoundedRectangleButton button = entry.getValue();
+            if (button.update(currentWidth, currentHeight)) {
+                switch (entry.getKey()) {
+                    case "singlePlayerButton": {
+                        MenuManager.setCurrentMenu("SingleplayerMenu");
+                        break;
+                    }
+                    case "multiplayerButton": {
+                        MenuManager.setCurrentMenu("MultiplayerMenu");
+                        break;
+                    }
+                    case "achievementsButton": {
+                        MenuManager.setCurrentMenu("AchievementsMenu");
+                        break;
+                    }
+                    case "settingsButton": {
+                        MenuManager.setCurrentMenu("SettingsMenu");
+                        break;
+                    }
+                    case "languageButton": {
+                        MenuManager.setCurrentMenu("LanguageMenu");
+                        break;
+                    }
+                    case "exitButton": {
+                        exit(0);
+                        break;
                     }
                 }
             }
         }
-
-        playerSettings.update(currentWidth, currentHeight);
-
     }
 
+    @Override
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
-        if(buttons != null) {
-            for (RoundedRectangleButton button : buttons.values()) {
-                button.draw(g, currentWidth, currentHeight);
-            }
+        for (RoundedRectangleButton button : buttons.values()) {
+            button.draw(g, currentWidth, currentHeight);
         }
-
-        playerSettings.draw(g, currentWidth, currentHeight);
     }
-
-
 }

@@ -6,12 +6,12 @@ src/
 │   │   └── com/
 │   │       └── pro100v1ad3000/
 │   │           ├── core/                  # Ядро игры
-│   │           │   ├── AssetManager.java
-│   │           │   ├── GameMain.java
-│   │           │   ├── GameStateManager.java
-│   │           │   ├── GameLoop.java
-│   │           │   ├── GamePanel.java
-│   │           │   └── GameWindow.java
+│   │           │   ├── GameLoop.java // Запускает игровые циклы в 2х потоках
+│   │           │   ├── GameMain.java // Точка входа в программу
+│   │           │   ├── GamePanel.java // Пользовательскую панель для отображения графики в игре
+│   │           │   ├── GamePlayStateManager.java // Контролирует все процессы во время самой игры
+│   │           │   ├── GameStateManager.java // Контролирует все процессы
+│   │           │   └── GameWindow.java // Создает окно
 │   │           │
 │   │           ├── network/               # Мультиплеер
 │   │           │   ├── client/            # Клиентская часть
@@ -42,16 +42,29 @@ src/
 │   │           │   └── physics/           # Физика (коллайдеры, Raycast)
 │   │           │
 │   │           ├── world/                 # Игровой мир
-│   │           │   ├── chunks/            # Чанкование (если открытый мир)
+│   │           │   ├── chunks/            # Чанкование
 │   │           │   ├── terrain/           # Генерация ландшафта
 │   │           │   ├── lighting/          # Освещение, тени
 │   │           │   └── Skybox.java        # Небо, окружение
 │   │           │
 │   │           ├── ui/                    # Интерфейс
 │   │           │   ├── menus/             # Меню (главное, настройки)
+│   │           │   │   ├── multiplayer/
+│   │           │   │   │    └── MultiplayerMenu.java
+│   │           │   │   ├── playerSettings/
+│   │           │   │   │    ├── Nickname.java
+│   │           │   │   │    ├── PlayerAppearance.java
+│   │           │   │   │    └── PlayerSettings.java
+│   │           │   │   ├── settings/
+│   │           │   │   │    └── ControlSettingsMenu.java
+│   │           │   │   ├── LanguageMenu.java
+│   │           │   │   ├── Menus.java
+│   │           │   │   ├── PlayerSettingsMenu.java
+│   │           │   │   ├── SettingsMenu.java
+│   │           │   │   └── StartMenu.java // Управляет шрифтами
 │   │           │   ├── hud/               # HUD (здоровье, чат)
 │   │           │   └── fonts/             # Шрифты
-│   │           │
+│   │           │       └── FontManager.java // Управляет шрифтами
 │   │           ├── utils/                 # Утилиты
 │   │           │   ├── MathUtils.java     # Векторы, кватернионы
 │   │           │   ├── InputConstants.java
