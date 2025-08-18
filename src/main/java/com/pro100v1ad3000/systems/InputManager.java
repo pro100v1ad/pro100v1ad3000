@@ -1,6 +1,7 @@
 package main.java.com.pro100v1ad3000.systems;
 
 import main.java.com.pro100v1ad3000.core.GamePanel;
+import main.java.com.pro100v1ad3000.utils.Config;
 
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -58,12 +59,13 @@ public class InputManager {
         return mouseButtonStates.getOrDefault(button, false);
     }
 
+    // Сразу масштабирует координаты мыши по базовому масштабу окна, по которому все рисуется.
     public static int getMouseX() {
-        return mouseX;
+        return (int) (mouseX / (GamePanel.getInstance().getCurrentSize().width / (float) Config.BASE_WIDTH));
     }
 
     public static int getMouseY() {
-        return mouseY;
+        return (int) (mouseY / (GamePanel.getInstance().getCurrentSize().height / (float) Config.BASE_HEIGHT));
     }
 
     public static int getMouseScroll() {

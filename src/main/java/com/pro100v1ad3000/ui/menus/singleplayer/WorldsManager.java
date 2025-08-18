@@ -4,6 +4,7 @@ package main.java.com.pro100v1ad3000.ui.menus.singleplayer;
 import main.java.com.pro100v1ad3000.ui.menus.Menu;
 import main.java.com.pro100v1ad3000.ui.menus.singleplayer.worldManager.WorldInfoPanel;
 import main.java.com.pro100v1ad3000.ui.menus.singleplayer.worldManager.WorldList;
+import main.java.com.pro100v1ad3000.ui.utils.ScrollableArea;
 import main.java.com.pro100v1ad3000.world.WorldInfo;
 
 import java.awt.*;
@@ -17,16 +18,18 @@ public class WorldsManager extends Menu {
 
 
     private final WorldList worldList;
+    private ScrollableArea scrollableArea;
 
     public WorldsManager(int posX, int posY, int width, int height) {
-        this.posWorldInfoPanelX = posX + width;
+        this.posWorldInfoPanelX = posX + width/3;
         this.posWorldInfoPanelY = posY;
         this.worldInfoPanelWidth = width*2/3;
         this.worldInfoPanelHeight = height;
 
         worldList = new WorldList(posX, posY, width/3, height);
-        addWorld("world1", "123456");
-        setVisibleWorld(worlds.get("world1").getWorldInfo());
+        scrollableArea = new ScrollableArea(posX, posY, width/3, height, width, height*20);
+//        addWorld("world1", "123456");
+//        setVisibleWorld(worlds.get("world1").getWorldInfo());
     }
 
     private void addWorld(String name, String seed) {
@@ -47,6 +50,7 @@ public class WorldsManager extends Menu {
                 worldInfoPanel.update(currentWidth, currentHeight);
             }
         }
+        scrollableArea.update();
     }
 
     @Override
@@ -57,6 +61,7 @@ public class WorldsManager extends Menu {
                 worldInfoPanel.draw(g, currentWidth, currentHeight);
             }
         }
+        scrollableArea.draw(g);
     }
 
 

@@ -1,8 +1,6 @@
 package main.java.com.pro100v1ad3000.ui.utils;
 
 import main.java.com.pro100v1ad3000.systems.InputManager;
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
-import main.java.com.pro100v1ad3000.utils.Config;
 
 
 import java.awt.*;
@@ -68,10 +66,7 @@ public class InputFields {
         int mouseX = InputManager.getMouseX();
         int mouseY = InputManager.getMouseY();
 
-        int scaleMouseX = (int) (mouseX / (currentWidth / (float) Config.BASE_WIDTH));
-        int scaleMouseY = (int) (mouseY / (currentHeight / (float) Config.BASE_HEIGHT));
-
-        boolean flag = isPointInRoundedRectangle(scaleMouseX, scaleMouseY);
+        boolean flag = isPointInRoundedRectangle(mouseX, mouseY);
         if(flag && InputManager.isMouseButtonPressed(1)) {
             textArea.setActive(true);
             isActiveTextArea = true;

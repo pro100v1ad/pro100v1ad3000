@@ -4,6 +4,7 @@ import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menu;
 import main.java.com.pro100v1ad3000.ui.menus.MenuManager;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
+import main.java.com.pro100v1ad3000.ui.utils.ScrollableArea;
 import main.java.com.pro100v1ad3000.utils.Config;
 
 import java.awt.*;
@@ -30,10 +31,13 @@ public class SingleplayerMenu extends Menu {
     private final Map<String, RoundedRectangleButton> buttons = new HashMap<>();
     private final WorldsManager worldsManager;
 
+
+
     public SingleplayerMenu() {
         super();
         worldsManager = new WorldsManager(RECT_X, RECT_Y, RECT_WIDTH, RECT_HEIGHT);
         setButtons();
+        
     }
 
     private void setButtons() {
@@ -71,6 +75,7 @@ public class SingleplayerMenu extends Menu {
         }
 
         worldsManager.update(currentWidth, currentHeight);
+
     }
 
     @Override

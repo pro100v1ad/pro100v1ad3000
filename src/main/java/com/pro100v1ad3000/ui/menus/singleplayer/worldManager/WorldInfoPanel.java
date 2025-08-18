@@ -1,6 +1,5 @@
 package main.java.com.pro100v1ad3000.ui.menus.singleplayer.worldManager;
 
-import main.java.com.pro100v1ad3000.ui.fonts.FontManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menu;
 import main.java.com.pro100v1ad3000.world.WorldInfo;
 
@@ -34,9 +33,5 @@ public class WorldInfoPanel extends Menu {
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
         g.setColor(Color.WHITE);
         g.drawRect(x, y, width, height);
-        if(isVisible) {
-            g.setFont(FontManager.getFont("default").deriveFont(16f));
-            g.drawString(" name: " + worldInfo.getName() + " and seed: " + worldInfo.getSeed(), x, y + 16);
-        }
     }
 }

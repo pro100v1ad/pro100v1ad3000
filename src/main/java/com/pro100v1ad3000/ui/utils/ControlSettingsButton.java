@@ -10,8 +10,6 @@ import java.awt.image.BufferedImage;
 
 public class ControlSettingsButton {
 
-    private InputManager inputManager;
-
     private int rectX, rectY, rectWidth, rectHeight, cornerRadius;
     private BufferedImage defaultImage, activeImage, highlightedButton;
     private boolean isDefaultButton, isActiveButton, isHighlightedButton;
@@ -19,15 +17,13 @@ public class ControlSettingsButton {
     private float fontSize;
     private Color textColor;
 
-    public ControlSettingsButton(InputManager inputManager, int rectX, int rectY, int rectWidth, int rectHeight, int cornerRadius, String defaultImageName, String activeImageName, String pressedImageName) {
+    public ControlSettingsButton(int rectX, int rectY, int rectWidth, int rectHeight, int cornerRadius, String defaultImageName, String activeImageName, String pressedImageName) {
         this.rectX = rectX;
         this.rectY = rectY;
         this.rectWidth = rectWidth;
         this.rectHeight = rectHeight;
         this.cornerRadius = cornerRadius;
         loadImages(defaultImageName, activeImageName, pressedImageName);
-
-        this.inputManager = inputManager;
 
 
     }
@@ -119,13 +115,11 @@ public class ControlSettingsButton {
 
     public boolean update(int currentWidth, int currentHeight) {
 
-        int mouseX = inputManager.getMouseX();
-        int mouseY = inputManager.getMouseY();
+        int mouseX = InputManager.getMouseX();
+        int mouseY = InputManager.getMouseY();
 
-        int scaleMouseX = (int) (mouseX / (currentWidth / (float) Config.BASE_WIDTH));
-        int scaleMouseY = (int) (mouseY / (currentHeight / (float) Config.BASE_HEIGHT));
 
-        if(isPointInRoundedRectangle(scaleMouseX, scaleMouseY)) {
+        if(isPointInRoundedRectangle(mouseX, mouseY)) {
             isActiveButton = true;
             isDefaultButton = false;
         } else {
@@ -134,7 +128,7 @@ public class ControlSettingsButton {
         }
 
         if(!isHighlightedButton) {
-            isHighlightedButton = inputManager.isMouseButtonPressed(1) && isActiveButton;
+            isHighlightedButton = InputManager.isMouseButtonPressed(1) && isActiveButton;
         }
         return isHighlightedButton;
 

@@ -1,10 +1,7 @@
 package main.java.com.pro100v1ad3000.ui.menus.singleplayer.worldManager;
 
 import main.java.com.pro100v1ad3000.systems.InputManager;
-import main.java.com.pro100v1ad3000.ui.fonts.FontManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menu;
-import main.java.com.pro100v1ad3000.utils.Config;
-import main.java.com.pro100v1ad3000.world.WorldInfo;
 
 import java.awt.*;
 
@@ -28,9 +25,6 @@ public class WorldList extends Menu {
 
         int mouseX = InputManager.getMouseX();
         int mouseY = InputManager.getMouseY();
-
-        int scaleMouseX = (int) (mouseX / (currentWidth / (float) Config.BASE_WIDTH));
-        int scaleMouseY = (int) (mouseY / (currentHeight / (float) Config.BASE_HEIGHT));
 
 
     }

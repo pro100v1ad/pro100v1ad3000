@@ -125,10 +125,7 @@ public class RoundedRectangleButton {
         int mouseX = InputManager.getMouseX();
         int mouseY = InputManager.getMouseY();
 
-        int scaleMouseX = (int) (mouseX / (currentWidth / (float) Config.BASE_WIDTH));
-        int scaleMouseY = (int) (mouseY / (currentHeight / (float) Config.BASE_HEIGHT));
-
-        if(isPointInRoundedRectangle(scaleMouseX, scaleMouseY)) {
+        if(isPointInRoundedRectangle(mouseX, mouseY)) {
             isActiveButton = true;
             isDefaultButton = false;
         } else {

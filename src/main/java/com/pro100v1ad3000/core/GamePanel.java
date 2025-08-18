@@ -9,14 +9,23 @@ import java.awt.image.BufferedImage;
 
 public class GamePanel extends JPanel {
 
+    private static GamePanel instance;
+
     private BufferedImage renderBuffer;
     private final Object bufferLock = new Object();
 
     public GamePanel() {
+
+        instance = this;
+
         setPreferredSize(new Dimension(Config.BASE_WINDOW_WIDTH, Config.BASE_WINDOW_HEIGHT));
         setDoubleBuffered(false); // Используем свой буфер
         setFocusable(true);
         InputManager.initialize(this);
+    }
+
+    public static GamePanel getInstance(){
+        return instance;
     }
 
     public void onResize() {
