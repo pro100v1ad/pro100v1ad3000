@@ -1,37 +1,43 @@
 package main.java.com.pro100v1ad3000.ui.menus.singleplayer.worldManager;
 
-import main.java.com.pro100v1ad3000.ui.menus.Menu;
 import main.java.com.pro100v1ad3000.world.WorldInfo;
-
 import java.awt.*;
 
-public class WorldInfoPanel extends Menu {
+public class WorldInfoPanel {
+    private final int posX, posY, width, height;
+    private final String name, seed;
+    private boolean isVisible;
 
-    private final WorldInfo worldInfo;
-    private int x, y, width, height;
-
-    public WorldInfoPanel(int x, int y, int width, int height, String name, String seed) {
-
-        this.x = x;
-        this.y = y;
+    public WorldInfoPanel(int posX, int posY, int width, int height, String name, String seed) {
+        this.posX = posX;
+        this.posY = posY;
         this.width = width;
         this.height = height;
+        this.name = name;
+        this.seed = seed;
+        this.isVisible = false;
+    }
 
-        worldInfo = new WorldInfo(name, seed);
+    public void setVisible(boolean visible) {
+        isVisible = visible;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
     }
 
     public WorldInfo getWorldInfo() {
-        return worldInfo;
+        return new WorldInfo(name, seed);
     }
 
-    @Override
-    public void update(int currentWidth, int currentHeight) {
-
-    }
-
-    @Override
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {
-        g.setColor(Color.WHITE);
-        g.drawRect(x, y, width, height);
+        if (!isVisible) return;
+
+        g.setColor(new Color(220, 220, 220, 200));
+        g.fillRect(posX, posY, width, height);
+
+        g.setColor(Color.BLACK);
+        g.drawString("World Name: " + name, posX + 10, posY + 30);
+        g.drawString("Seed: " + seed, posX + 10, posY + 60);
     }
 }

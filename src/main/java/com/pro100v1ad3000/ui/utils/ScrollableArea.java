@@ -57,8 +57,8 @@ public class ScrollableArea {
 
     // Устанавливает новую видимую область
     public void setVisibleArea(int width, int height) {
-        this.visibleWidth = width;
-        this.visibleHeight = height;
+        this.realWidth = width;
+        this.realHeight = height;
         updateLogic();
         fixOffsets();
     }
@@ -119,20 +119,10 @@ public class ScrollableArea {
 
     // Основной метод отрисовки (можно расширить для отрисовки контента)
     public void draw(Graphics2D g) {
-        // Сохраняем текущее состояние графики
-        Graphics2D g2d = (Graphics2D) g.create();
-        // Смещаем систему координат для отрисовки контента с учётом прокрутки
-        g2d.translate(posX - offsetX, posY - offsetY);
-        // Здесь можно отрисовать ваш контент, например:
-
-        // Восстанавливаем состояние графики
-        g2d.dispose();
-
-        // Отрисовываем полосы прокрутки поверх контента
         drawScrollbars(g);
     }
 
-    // Геттеры для текущих смещений (для использования в отрисовке контента)
+    // Геттеры для текущих смещений (для использования в отрисовки контента)
     public int getOffsetX() {
         return offsetX;
     }

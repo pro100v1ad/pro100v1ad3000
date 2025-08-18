@@ -1,5 +1,6 @@
 package main.java.com.pro100v1ad3000.ui.menus;
 
+import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.menus.achievements.AchievementsMenu;
 import main.java.com.pro100v1ad3000.ui.menus.multiplayer.MultiplayerMenu;
 import main.java.com.pro100v1ad3000.ui.menus.settings.SettingsMenu;
@@ -54,6 +55,7 @@ public class MenuManager {
     public void update(int currentWidth, int currentHeight) {
         if (currentMenu != null && currentMenu.isVisible()) {
             currentMenu.update(currentWidth, currentHeight);
+            InputManager.resetInputStates();
         }
     }
 
