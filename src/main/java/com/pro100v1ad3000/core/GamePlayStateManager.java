@@ -1,12 +1,10 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.systems.resources.AssetManager;
-import main.java.com.pro100v1ad3000.entities.players.LocalPlayer;
-import main.java.com.pro100v1ad3000.entities.players.Player;
+import main.java.com.pro100v1ad3000.world.entities.players.LocalPlayer;
+import main.java.com.pro100v1ad3000.world.entities.players.Player;
 import main.java.com.pro100v1ad3000.network.client.NetworkClient;
 import main.java.com.pro100v1ad3000.network.packets.*;
 import main.java.com.pro100v1ad3000.network.server.NetworkServer;
-import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.utils.Config;
 import main.java.com.pro100v1ad3000.utils.Logger;
 

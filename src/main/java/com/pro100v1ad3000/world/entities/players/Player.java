@@ -1,4 +1,4 @@
-package main.java.com.pro100v1ad3000.entities.players;
+package main.java.com.pro100v1ad3000.world.entities.players;
 
 import java.awt.*;
 

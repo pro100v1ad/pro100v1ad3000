@@ -4,8 +4,9 @@ import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
 import main.java.com.pro100v1ad3000.ui.menus.Menu;
 import main.java.com.pro100v1ad3000.ui.menus.MenuManager;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
-import main.java.com.pro100v1ad3000.ui.utils.ScrollableArea;
 import main.java.com.pro100v1ad3000.utils.Config;
+import main.java.com.pro100v1ad3000.utils.Utils;
+import main.java.com.pro100v1ad3000.world.generator.WorldGenerator;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -29,13 +30,13 @@ public class SingleplayerMenu extends Menu {
     private final int CREATE_BUTTON_HEIGHT = Config.BASE_HEIGHT/15;
 
     private final Map<String, RoundedRectangleButton> buttons = new HashMap<>();
-    private final WorldsManager worldsManager;
+    private final WorldsChoiceManager worldsManager;
 
 
 
     public SingleplayerMenu() {
         super();
-        worldsManager = new WorldsManager(RECT_X, RECT_Y, RECT_WIDTH, RECT_HEIGHT);
+        worldsManager = new WorldsChoiceManager(RECT_X, RECT_Y, RECT_WIDTH, RECT_HEIGHT);
         setButtons();
         
     }
@@ -52,8 +53,8 @@ public class SingleplayerMenu extends Menu {
     }
 
     private void setButtonsText() {
-        buttons.get("exitButton").setText(LanguageManager.getText("menu.startMenu.buttons.singlePlayer_button"), 16, Color.BLUE);
-        buttons.get("createButton").setText(LanguageManager.getText("menu.startMenu.buttons.singlePlayer_button"), 16, Color.BLUE);
+        buttons.get("exitButton").setText(LanguageManager.getText("menu.singleplayerMenu.buttons.done_button"), 16, Color.BLUE);
+        buttons.get("createButton").setText(LanguageManager.getText("menu.singleplayerMenu.buttons.createWorld_button"), 16, Color.BLUE);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class SingleplayerMenu extends Menu {
                         break;
                     }
                     case "createButton": {
-                        MenuManager.setCurrentMenu("CreateWorldMenu");
+                        worldsManager.addWorld(WorldGenerator.createWorld(Utils.generateRandomText(5), Utils.generateRandomText(10)));
                         break;
                     }
                 }

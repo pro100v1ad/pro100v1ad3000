@@ -1,4 +1,4 @@
-package main.java.com.pro100v1ad3000.entities.players;
+package main.java.com.pro100v1ad3000.world.entities.players;
 
 import main.java.com.pro100v1ad3000.network.client.NetworkClient;
 import main.java.com.pro100v1ad3000.network.packets.PlayerConnectPacket;

@@ -2,7 +2,7 @@ package main.java.com.pro100v1ad3000.ui.menus.singleplayer.worldManager;
 
 import main.java.com.pro100v1ad3000.systems.InputManager;
 import main.java.com.pro100v1ad3000.ui.utils.ScrollableArea;
-import main.java.com.pro100v1ad3000.world.WorldInfo;
+import main.java.com.pro100v1ad3000.world.WorldConfig;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class WorldList {
     private final int posX, posY, width, height;
-    private final List<WorldInfo> worlds;
+    private final List<WorldConfig> worlds;
     private int selectedWorldIndex;
     private ScrollableArea scrollableArea;
 
@@ -27,8 +27,13 @@ public class WorldList {
         scrollableArea = new ScrollableArea(posX, posY, width, height, width, height);
     }
 
-    public void addWorld(WorldInfo world) {
+    public void addWorld(WorldConfig world) {
         worlds.add(world);
+        scrollableArea.setVisibleArea(width, getTotalWorldsHeight());
+    }
+
+    public void deleteWorld(WorldConfig world) {
+        worlds.remove(world);
         scrollableArea.setVisibleArea(width, getTotalWorldsHeight());
     }
 
@@ -90,7 +95,7 @@ public class WorldList {
         return worlds.size() * worldRectHeight; // 50px на каждый мир
     }
 
-    public WorldInfo getSelectedWorld() {
+    public WorldConfig getSelectedWorld() {
         if (selectedWorldIndex >= 0 && selectedWorldIndex < worlds.size()) {
             return worlds.get(selectedWorldIndex);
         }

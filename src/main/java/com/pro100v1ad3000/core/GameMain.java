@@ -1,6 +1,6 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.entities.players.utils.PlayerSettingsManager;
+import main.java.com.pro100v1ad3000.world.entities.players.utils.PlayerSettingsManager;
 import main.java.com.pro100v1ad3000.utils.Logger;
 
 import javax.swing.*;
