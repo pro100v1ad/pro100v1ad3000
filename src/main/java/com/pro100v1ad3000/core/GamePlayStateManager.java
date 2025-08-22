@@ -1,5 +1,7 @@
 package main.java.com.pro100v1ad3000.core;
 
+import main.java.com.pro100v1ad3000.world.World;
+import main.java.com.pro100v1ad3000.world.WorldConfig;
 import main.java.com.pro100v1ad3000.world.entities.players.LocalPlayer;
 import main.java.com.pro100v1ad3000.world.entities.players.Player;
 import main.java.com.pro100v1ad3000.network.client.NetworkClient;
@@ -15,37 +17,39 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GamePlayStateManager {
 
-    private final Map<Integer, Player> players = new ConcurrentHashMap<>();
     private LocalPlayer localPlayer;
     private NetworkClient networkClient;
     private NetworkServer networkServer;
-    private boolean isMultiplayer = false;
     private boolean isHost = false;
     private String serverAddress;
+
+    private WorldConfig worldConfig;
+    private World world;
 
     private static final int MAX_RECONNECT_ATTEMPTS = 8;
     private static final int RECONNECT_DELAY_MS = 5000;
 
-    public GamePlayStateManager() {
+    public GamePlayStateManager(WorldConfig worldConfig) {
+        this.worldConfig = worldConfig;
+        initSinglePlayer();
+    }
 
+    public GamePlayStateManager(WorldConfig worldConfig, boolean isHost, String hostAddress) {
+        this.worldConfig = worldConfig;
+        initMultiplayer(isHost, hostAddress);
     }
 
     public void initSinglePlayer() {
-        // Инициализирует игру в режиме одного игрока
-        isMultiplayer = false;
-        players.clear();
-        localPlayer = new LocalPlayer(1, 0, 0, null);
-        players.put(localPlayer.getId(), localPlayer);
-
         // Создаем одиночную игру
+        Logger.info("Creating a single player game...");
+        world = new World(worldConfig);
+
     }
 
     public void initMultiplayer(boolean isHost, String hostAddress) {
         // Инициализирует многопользовательскую игру, устанавливая роль хоста и адрес сервера
         this.isHost = isHost;
         this.serverAddress = hostAddress;
-        this.isMultiplayer = true;
-        players.clear();
 
         if (isHost) {
             startServer(); // Запускает сервер, если текущий экземпляр является хостом
@@ -73,8 +77,7 @@ public class GamePlayStateManager {
 
         if(networkClient.connect()) {
             int playerId = 0;
-            localPlayer = new LocalPlayer(playerId, 0, 0, networkClient);
-            players.put(localPlayer.getId(), localPlayer);
+//            localPlayer = new LocalPlayer(playerId, 0, 0);
 
             networkClient.sendPacket(new PlayerConnectPacket(playerId, 0, 0));
             Logger.info("Player connected to server id: " + playerId);
@@ -96,7 +99,9 @@ public class GamePlayStateManager {
     }
 
     public void update() {
-
+        if(world != null) {
+            world.update();
+        }
     }
 
     public void draw(Graphics2D g, int currentWidth, int currentHeight) {

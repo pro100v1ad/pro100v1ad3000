@@ -1,20 +1,17 @@
 package main.java.com.pro100v1ad3000.world;
 
 public class WorldConfig {
-
-    private String name;
-    private String seed;
+    private final String name;
+    private final String seed;
 
     public WorldConfig(String name, String seed) {
         this.name = name;
         this.seed = seed;
+
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSeed() {
-        return seed;
-    }
+    // Геттеры
+    public String getName() { return name; }
+    public String getSeed() { return seed; }
 }
+

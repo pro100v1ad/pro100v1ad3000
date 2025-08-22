@@ -2,23 +2,30 @@ package main.java.com.pro100v1ad3000.core;
 
 import main.java.com.pro100v1ad3000.ui.menus.MenuManager;
 import main.java.com.pro100v1ad3000.utils.Config;
+import main.java.com.pro100v1ad3000.utils.Logger;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class GameStateManager {
 
-    private boolean isActiveGame;
+    private static boolean isActiveGame;
 
-    private GamePlayStateManager gamePlayStateManager;
-    private MenuManager menuManager;
+    private static GamePlayStateManager gamePlayStateManager;
+    private final MenuManager menuManager;
 
 
 
     public GameStateManager() {
-
-        gamePlayStateManager = new GamePlayStateManager();
         menuManager = new MenuManager();
+    }
+
+    public static void setGamePlayStateManager(GamePlayStateManager game) {
+        gamePlayStateManager = game;
+    }
+
+    public static void setActiveGame(boolean activeGame) {
+        isActiveGame = activeGame;
     }
 
     public void update(float deltaTime, int currentWidth, int currentHeight) {
@@ -26,7 +33,8 @@ public class GameStateManager {
         if(!isActiveGame) { // Режим меню
             menuManager.update(currentWidth, currentHeight);
         } else { // Активная игра
-            gamePlayStateManager.update();
+            if(gamePlayStateManager == null) Logger.error("GamePlayStateManager is null");
+            else gamePlayStateManager.update();
         }
 
     }
@@ -52,7 +60,8 @@ public class GameStateManager {
         if(!isActiveGame) { // Режим меню
             menuManager.draw(g, currentWidth, currentHeight);
         } else { // Активная игра
-            gamePlayStateManager.draw(g, currentWidth, currentHeight);
+            if(gamePlayStateManager == null) Logger.error("GamePlayStateManager is null");
+            else gamePlayStateManager.draw(g, currentWidth, currentHeight);
         }
 
     }

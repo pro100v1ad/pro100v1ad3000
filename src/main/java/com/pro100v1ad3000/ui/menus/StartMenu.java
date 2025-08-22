@@ -1,6 +1,7 @@
 package main.java.com.pro100v1ad3000.ui.menus;
 
 import main.java.com.pro100v1ad3000.systems.language.LanguageManager;
+import main.java.com.pro100v1ad3000.ui.menus.startMenu.PlayerInfoManager;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
 import main.java.com.pro100v1ad3000.utils.Config;
 
@@ -13,10 +14,20 @@ import static java.lang.System.exit;
 public class StartMenu extends Menu{
 
     private final Map<String, RoundedRectangleButton> buttons = new HashMap<>();
+    private final PlayerInfoManager playerInfoManager;
+    private final int PLAYER_INFO_POS_X, PLAYER_INFO_POS_Y;
+    private final int PLAYER_INFO_WIDTH, PLAYER_INFO_HEIGHT;
 
     public StartMenu() {
         super();
         setButtons();
+
+        PLAYER_INFO_POS_X = Config.BASE_WIDTH*3/4;
+        PLAYER_INFO_POS_Y = Config.BASE_HEIGHT*2/5;
+        PLAYER_INFO_WIDTH = Config.BASE_WIDTH/5;
+        PLAYER_INFO_HEIGHT = Config.BASE_HEIGHT/2;
+
+        playerInfoManager = new PlayerInfoManager(PLAYER_INFO_POS_X, PLAYER_INFO_POS_Y, PLAYER_INFO_WIDTH, PLAYER_INFO_HEIGHT);
     }
 
     private void setButtons() {
@@ -92,6 +103,8 @@ public class StartMenu extends Menu{
                 }
             }
         }
+
+        playerInfoManager.update(currentWidth, currentHeight);
     }
 
     @Override
@@ -99,5 +112,6 @@ public class StartMenu extends Menu{
         for (RoundedRectangleButton button : buttons.values()) {
             button.draw(g, currentWidth, currentHeight);
         }
+        playerInfoManager.draw(g, currentWidth, currentHeight);
     }
 }

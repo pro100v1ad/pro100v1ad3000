@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class WorldInfoPanel {
     private final int posX, posY, width, height;
-    private final WorldConfig worldInfo;
+    private final WorldConfig worldConfig;
     private boolean isVisible;
 
     private final Map<String, RoundedRectangleButton> buttons = new HashMap<>();
@@ -25,7 +25,7 @@ public class WorldInfoPanel {
         this.posY = posY;
         this.width = width;
         this.height = height;
-        this.worldInfo = worldInfo;
+        this.worldConfig = worldInfo;
         this.isVisible = false;
         this.worldsManager = worldsManager;
 
@@ -65,8 +65,8 @@ public class WorldInfoPanel {
         return isVisible;
     }
 
-    public WorldConfig getWorldInfo() {
-        return worldInfo;
+    public WorldConfig getWorldConfig() {
+        return worldConfig;
     }
 
     public void update(int currentWidth, int currentHeight) {
@@ -75,11 +75,12 @@ public class WorldInfoPanel {
             if (button.update(currentWidth, currentHeight)) {
                 switch (entry.getKey()) {
                     case "deleteWorldButton": {
-                        worldsManager.deleteWorld(worldInfo);
+                        worldsManager.deleteWorld(worldConfig);
                         break;
                     }
                     case "playButton": {
-
+                        worldsManager.startGame(worldConfig);
+    // Когда нажата клавиша запуска игры
                         break;
                     }
                 }
@@ -94,8 +95,8 @@ public class WorldInfoPanel {
         g.fillRect(posX, posY, width, height);
 
         g.setColor(Color.BLACK);
-        g.drawString("World Name: " + worldInfo.getName(), posX + 10, posY + 30);
-        g.drawString("Seed: " + worldInfo.getSeed(), posX + 10, posY + 60);
+        g.drawString("World Name: " + worldConfig.getName(), posX + 10, posY + 30);
+        g.drawString("Seed: " + worldConfig.getSeed(), posX + 10, posY + 60);
 
         for (RoundedRectangleButton button : buttons.values()) {
             button.draw(g, currentWidth, currentHeight);

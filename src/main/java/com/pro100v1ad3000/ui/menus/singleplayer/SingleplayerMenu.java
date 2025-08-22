@@ -6,6 +6,7 @@ import main.java.com.pro100v1ad3000.ui.menus.MenuManager;
 import main.java.com.pro100v1ad3000.ui.utils.RoundedRectangleButton;
 import main.java.com.pro100v1ad3000.utils.Config;
 import main.java.com.pro100v1ad3000.utils.Utils;
+import main.java.com.pro100v1ad3000.world.WorldConfig;
 import main.java.com.pro100v1ad3000.world.generator.WorldGenerator;
 
 import java.awt.*;
@@ -36,7 +37,7 @@ public class SingleplayerMenu extends Menu {
 
     public SingleplayerMenu() {
         super();
-        worldsManager = new WorldsChoiceManager(RECT_X, RECT_Y, RECT_WIDTH, RECT_HEIGHT);
+        worldsManager = new WorldsChoiceManager(RECT_X, RECT_Y, RECT_WIDTH, RECT_HEIGHT, false);
         setButtons();
         
     }
@@ -68,7 +69,7 @@ public class SingleplayerMenu extends Menu {
                         break;
                     }
                     case "createButton": {
-                        worldsManager.addWorld(WorldGenerator.createWorld(Utils.generateRandomText(5), Utils.generateRandomText(10)));
+                        worldsManager.addWorld(new WorldConfig("defaultName", "123456"));
                         break;
                     }
                 }

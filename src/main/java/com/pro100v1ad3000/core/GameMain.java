@@ -1,7 +1,7 @@
 package main.java.com.pro100v1ad3000.core;
 
-import main.java.com.pro100v1ad3000.world.entities.players.utils.PlayerSettingsManager;
 import main.java.com.pro100v1ad3000.utils.Logger;
+import main.java.com.pro100v1ad3000.world.entities.players.utils.PlayerInfoSaveManager;
 
 import javax.swing.*;
 
@@ -11,8 +11,6 @@ public class GameMain {
     private GameLoop gameLoop;
     private GameStateManager gameStateManager;
 
-    private PlayerSettingsManager playerSettingsManager;
-
     public void start() {
 
         SwingUtilities.invokeLater(() -> {
@@ -20,7 +18,6 @@ public class GameMain {
 
             gameWindow = new GameWindow();
             GamePanel gamePanel = gameWindow.getGamePanel();
-            playerSettingsManager = new PlayerSettingsManager(); // Тоже сделать статическим, тк как игрок всего 1 для игры.
             gameStateManager = new GameStateManager();
 
             // Создаем игровой цикл
@@ -43,9 +40,9 @@ public class GameMain {
 //        if(gamePlayStateManager != null) {
 //            gamePlayStateManager.dispose();
 //        }
-        if(playerSettingsManager != null) {
-            playerSettingsManager.dispose();
-        }
+        // Сохраняем информацию об игроках
+        PlayerInfoSaveManager players = PlayerInfoSaveManager.getInstance();
+        players.savePlayers();
 
         Logger.shutdown();
     }
