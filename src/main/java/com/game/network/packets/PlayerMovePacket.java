@@ -1,0 +1,21 @@
+package main.java.com.game.network.packets;
+
+import java.io.Serializable;
+
+public class PlayerMovePacket implements Serializable {
+
+    private final int playerId;
+    private final float x;
+    private final float y;
+
+    public PlayerMovePacket(int playerId, float x, float y) {
+        this.playerId = playerId;
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getPlayerId() { return playerId; }
+    public float getX() { return x; }
+    public float getY() { return y; }
+
+}
