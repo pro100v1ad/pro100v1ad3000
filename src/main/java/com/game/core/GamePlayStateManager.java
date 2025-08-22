@@ -1,5 +1,6 @@
 package main.java.com.game.core;
 
+import main.java.com.engine3D.core.Engine3D;
 import main.java.com.game.world.World;
 import main.java.com.game.world.WorldConfig;
 import main.java.com.game.world.entities.players.LocalPlayer;
@@ -22,6 +23,8 @@ public class GamePlayStateManager {
 
     private WorldConfig worldConfig;
     private World world;
+
+    private Engine3D engine3D;
 
     private static final int MAX_RECONNECT_ATTEMPTS = 8;
     private static final int RECONNECT_DELAY_MS = 5000;
